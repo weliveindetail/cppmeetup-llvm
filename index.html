@@ -20,6 +20,19 @@
 		<!-- Code syntax highlighting -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
 
+    <style>
+      .reveal section img.logo-tr { 
+        border: 0px;
+        margin: 0px;
+        margin-top: -20px;
+        opacity: .5;
+        float: right; }
+
+      .reveal section.section-tl {
+        text-align: left;
+        vertical-align: top; }
+    </style>
+
 		<!-- Printing and PDF exports -->
 		<script>
 			var link = document.createElement( 'link' );
@@ -42,7 +55,7 @@
 			<div class="slides">
 
 				<section>
-          <img data-src="img/icons/llvm-logo.svg" width="300" height="300" alt="xxx" style="border: 0px; margin: 2px;">
+          <img data-src="img/llvm-logo.svg" width="300" height="300" alt="xxx" style="border: 0px; margin: 2px;">
 					<h2>LLVM-based JIT Compilers</h2>
 					<small style="width: 72%; padding: 10px 0px;">
             <table style="width: 100%;">
@@ -78,7 +91,7 @@
             <h1 style="text-align: center;">JIT Compiler?</h1>
           </section>
           <section style="text-align: left;">
-            <h3 style="text-align: left;">What is a JIT Compiler?</h3>
+            <h3>What is a JIT Compiler?</h3>
             <br>
             <b>Compiler</b><br>
             <ul>
@@ -92,7 +105,7 @@
             </ul>
           </section>
           <section style="text-align: left;">
-            <h3 style="text-align: left;">What people mean with JIT Compiler?</h3>
+            <h3>What people mean with JIT Compiler?</h3>
             <br>
             <blockquote cite="http://eli.thegreenplace.net/2013/11/05/how-to-jit-an-introduction">
               Whenever a program, while running, creates and runs some new executable code 
@@ -100,14 +113,117 @@
               <cite>Eli Bendersky</cite>
             </blockquote>
             <br>
-            typically <b style="color: #c33;">during</b> the execution of a program<br>
-            it's a <b style="color: #c33;">runtime compiler</b>
+            &rarr; widely used as a synonym for <b style="color: #c33;">Runtime Compiler</b>
           </section>
         </section>
 
         <section>
-          <h3 style="padding-right: 50%;">What is...</h3>
-          <h1 style="padding-left: 0px;">LLVM?</h1>
+          <section>
+            <h3 style="text-align: left;">What is...</h3>
+            <h1 style="text-align: center;">LLVM?</h1>
+          </section>
+          <section style="text-align: left;">
+            <h3>What is LLVM?</h3>
+            <ul>
+              <li>&rarr; compiler infrastructure</li>
+              <li>&rarr; set of reusable libraries written in C++</li>
+              <li>&rarr; started in 2003 by <a target="_blank" href="https://en.wikipedia.org/wiki/Chris_Lattner">Chris Lattner</a> (University of Illinois) as <i>Low Level Virtual Machine</i></li>
+              <li>&rarr; today developed by the <a target="_blank" href="http://llvm.org/">LLVM Developer Group</a></li>
+            </ul>
+          </section>
+          <section style="text-align: left;">
+            <h3>Why is that interesting for C++ devs?</h3>
+            <ul>
+              <li>&rarr; huge code base:<br>open-source, modern C++</li>
+              <li>&rarr; sophisticated requirements:<br>modularity, portability, efficiency</li>
+              <li>&rarr; reusable components</li>
+              <li>&rarr; great development tools!</li>
+            </ul>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h1 style="text-align: center;">Projects</h1>
+          </section>
+          <section class="section-tl">
+            <img data-src="img/llvm-logo.svg" width="400" height="400" alt="xxx" class="logo-tr">
+            <br><br><br><br><br>
+            <h3 style="margin: 0px;">Clang &mdash; a compiler</h3>
+            <a target="_blank" href="http://clang.llvm.org/">http://clang.llvm.org/</a>
+            <ul>
+              <li>&rarr; LLVM reference project</li>
+              <li>&rarr; self-hosting since<br>February, 2nd 2010</li>
+              <li>&rarr; actively developed by Apple, Google, Microsoft, ARM, Sony, Intel, AMD, etc. &amp; the community</li>
+              <li>&rarr; a great playground, also for the C++ standards committee</li>
+            </ul>
+          </section>
+          <section class="section-tl">
+            <img data-src="img/root-banner.png" width="529" height="128" alt="xxx" class="logo-tr" style="margin-right: -56px;">
+            <br><br><br>
+            <h3 style="margin: 0px;">Cling &mdash; an interpreter</h3>
+            <a target="_blank" href="https://root.cern.ch/cling">https://root.cern.ch/cling</a>
+            <ul>
+              <li>&rarr; interactive C++ interpreter</li>
+              <li>&rarr; let's see it in action!</li>
+            </ul>
+            <br><br>
+          </section>
+          <section class="section-tl">
+            <img data-src="img/google-logo.png" width="200" height="200" alt="xxx" class="logo-tr">
+            <br><br><br><br>
+            <h3 style="margin: 0px;">AddressSanitizer &mdash; a development tool</h3>
+            <a target="_blank"
+               href="https://github.com/google/sanitizers/wiki/AddressSanitizer">
+                     https://github.com/google/sanitizers/wiki/AddressSanitizer</a>
+            <ul>
+              <li>&rarr; clang compiler flag <code>-fsanitize=address</code></li>
+              <li>&rarr; detects dangling pointer dereference, stack buffer overflow, 
+                         non-deterministic initialization, etc.</li>
+              <li>&rarr; essentially implemented as LLVM ("optimization") pass</li>
+              <li>&rarr; very low overhead: typically ~2x</li>
+            </ul>
+          </section>
+          <section class="section-tl">
+            <img data-src="img/emscripten_logo_full.png" width="408" height="111" alt="xxx" class="logo-tr">
+            <br><br><br>
+            <h3 style="margin: 0px;">Emscripten &mdash; a cross compiler</h3>
+            <ul>
+              <li>&rarr; compiles LLVM IR to asm.js</li>
+              <li>&rarr; examples: Unreal Engine 3, SQLite, Lua VM</li>
+              <li>&rarr; claims to achieve "near-native" speed, but depends largely on use-case and client setup</li>
+              <li>&rarr; <b>note:</b> needs to compile all dependencies to JS</li>
+            </ul>
+          </section>
+          <section class="section-tl">
+            <img data-src="img/juce-logo-with-text.svg" width="200" height="auto" alt="xxx" class="logo-tr">
+            <br><br><br><br>
+            <h3 style="margin: 0px;">Projucer &mdash; a live coding environment</h3>
+            <ul>
+              <li>&rarr; </li>
+              <li>&rarr; </li>
+              <li>&rarr; <a target="_blank" href="https://www.youtube.com/watch?v=imkVkRg-geI">
+                https://www.youtube.com/watch?v=imkVkRg-geI</a></li>
+            </ul>
+          </section>
+          <section class="section-tl">
+            <img data-src="img/dotnet_logo.png" width="200" height="200" alt="xxx" class="logo-tr">
+            <br><br><br><br>
+            <h3 style="margin: 0px;">LLILC &mdash; a cross compiler</h3>
+            <ul>
+              <li>&rarr; LLVM-based compiler for .NET's CoreCLR</li>
+              <li>&rarr; compiles MSIL Byte Code to LLVM IR</li>
+              <li>&rarr; <a target="_blank" href="https://github.com/dotnet/llilc">https://github.com/dotnet/llilc</a></li>
+            </ul>
+          </section>
+          <section class="section-tl">
+            <h3>Others..</h3>
+            <ul>
+              <li>LDC &mdash; compiles D to LLVM IR</li>
+              <li>GHC &mdash; compiles Haskel to LLVM IR</li>
+              SKIR, MapD
+            </ul>
+          </section>
         </section>
 			</div>
 
