@@ -87,28 +87,10 @@ body {
 .reveal ol,
 .reveal dl,
 .reveal ul {
-  display: inline-block;
-  text-align: left;
-  margin: 0 0 0 1em; }
-
-.reveal ol {
-  list-style-type: decimal; }
-
-.reveal ul {
-  list-style-type: disc; }
-
-.reveal ul ul {
-  list-style-type: square; }
-
-.reveal ul ul ul {
-  list-style-type: circle; }
-
-.reveal ul ul,
-.reveal ul ol,
-.reveal ol ol,
-.reveal ol ul {
-  display: block;
-  margin-left: 40px; }
+   list-style: none;
+   margin-left: 0;
+   padding-left: 0.88em;
+   text-indent: -0.88em; }
 
 .reveal dt {
   font-weight: bold; }
@@ -123,12 +105,35 @@ body {
 .reveal blockquote {
   display: block;
   position: relative;
-  width: 70%;
-  margin: 20px auto;
-  padding: 5px;
+
+  font-family: Georgia, serif;
   font-style: italic;
-  background: rgba(255, 255, 255, 0.05);
-  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2); }
+  margin: 0.25em 0;
+  padding: 0.35em 40px;
+  line-height: 1.45;
+  color: #383838;
+  /*
+  background: rgba(0, 0, 0, 0.05);
+  border-left: 4px solid #ddd;*/ }
+
+.reveal blockquote:before {
+  display: block;
+  position: absolute;
+  padding-left: 10px;
+  content: "\201C";
+  font-size: 80px;
+  left: -20px;
+  top: 0px;
+  color: #7a7a7a; }
+
+.reveal blockquote cite {
+  color: #999999;
+  font-size: 60%;
+  display: block;
+  margin-top: 5px; }
+
+.reveal blockquote cite:before {
+  content: "\2014 \2009"; }
 
 .reveal blockquote p:first-child,
 .reveal blockquote p:last-child {
