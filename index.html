@@ -25,7 +25,7 @@
         border: 0px;
         margin: 0px;
         margin-top: -20px;
-        opacity: .5;
+        opacity: 1.0;
         float: right; }
 
       .reveal section.section-tl {
@@ -53,6 +53,8 @@
 
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
+
+        <!-- ------------------------------------------------------------------------------------------------------------------ -->
 
 				<section>
           <img data-src="img/llvm-logo.svg" width="300" height="300" alt="xxx" style="border: 0px; margin: 2px;">
@@ -84,6 +86,8 @@
             </table>
 					</small>
 				</section>
+
+        <!-- ------------------------------------------------------------------------------------------------------------------ -->
 
         <section>
           <section>
@@ -142,6 +146,8 @@
           </section>
         </section>
 
+        <!-- ------------------------------------------------------------------------------------------------------------------ -->
+
         <section>
           <section>
             <h1 style="text-align: center;">Projects</h1>
@@ -153,7 +159,7 @@
             <a target="_blank" href="http://clang.llvm.org/">http://clang.llvm.org/</a>
             <ul>
               <li>&rarr; LLVM reference project</li>
-              <li>&rarr; self-hosting since<br>February, 2nd 2010</li>
+              <li>&rarr; self-hosting since February, 2nd 2010</li>
               <li>&rarr; actively developed by Apple, Google, Microsoft, ARM, Sony, Intel, AMD, etc. &amp; the community</li>
               <li>&rarr; a great playground, also for the C++ standards committee</li>
             </ul>
@@ -162,12 +168,13 @@
             <img data-src="img/root-banner.png" width="529" height="128" alt="xxx" class="logo-tr" style="margin-right: -56px;">
             <br><br><br>
             <h3 style="margin: 0px;">Cling &mdash; an interpreter</h3>
-            <a target="_blank" href="https://root.cern.ch/cling">https://root.cern.ch/cling</a>
+            <a target="_blank" href="https://root.cern.ch/cling-brief">https://root.cern.ch/cling-brief</a>
             <ul>
-              <li>&rarr; interactive C++ interpreter</li>
+              <li>&rarr; replaces old CINT command line interpreter</li>
+              <li>&rarr; rapid development tool for high energy physicists</li>
               <li>&rarr; let's see it in action!</li>
             </ul>
-            <br><br>
+            <br>
           </section>
           <section class="section-tl">
             <img data-src="img/google-logo.png" width="200" height="200" alt="xxx" class="logo-tr">
@@ -187,44 +194,77 @@
           <section class="section-tl">
             <img data-src="img/emscripten_logo_full.png" width="408" height="111" alt="xxx" class="logo-tr">
             <br><br><br>
-            <h3 style="margin: 0px;">Emscripten &mdash; a cross compiler</h3>
+            <h3 style="margin: 0px;">Emscripten &mdash; a source-to-source compiler</h3>
             <ul>
-              <li>&rarr; compiles LLVM IR to asm.js</li>
+              <li>&rarr; compiles C/C++ to asm.js</li>
               <li>&rarr; examples: Unreal Engine 3, SQLite, Lua VM</li>
               <li>&rarr; claims to achieve "near-native" speed, but depends largely on use-case and client setup</li>
-              <li>&rarr; <b>note:</b> needs to compile all dependencies to JS</li>
+              <li>&rarr; <b>note:</b> code size grows rapidly as all dependencies are compiled to JS</li>
             </ul>
           </section>
           <section class="section-tl">
-            <img data-src="img/juce-logo-with-text.svg" width="200" height="auto" alt="xxx" class="logo-tr">
+            <img data-src="img/mapd_banner.png" width="200" height="auto" alt="xxx" class="logo-tr">
             <br><br><br><br>
+            <h3 style="margin: 0px;">MapD &mdash; a visualization tool for big data</h3>
+            <ul>
+              <li>&rarr; JIT compiles database queries for runtime efficiency</li>
+              <li>&rarr; code generation time under 30ms</li>
+              <li>&rarr; LLVM IR to target specific CPU and/or GPU</li>
+              <li>&rarr; uses system runtime information as compile-time input for queries</li>
+              <li>&rarr; <a target="_blank" href="https://devblogs.nvidia.com/parallelforall/mapd-massive-throughput-database-queries-llvm-gpus/">
+                https://devblogs.nvidia.com/parallelforall/mapd-massive-throughput-database-queries-llvm-gpus/</a></li>
+            </ul>
+          </section>
+          <section class="section-tl">
+            <img data-src="img/juce-logo.svg" width="200" height="auto" alt="xxx" class="logo-tr">
+            <br><br><br><br><br>
             <h3 style="margin: 0px;">Projucer &mdash; a live coding environment</h3>
             <ul>
-              <li>&rarr; </li>
-              <li>&rarr; </li>
-              <li>&rarr; <a target="_blank" href="https://www.youtube.com/watch?v=imkVkRg-geI">
-                https://www.youtube.com/watch?v=imkVkRg-geI</a></li>
+              <li>&rarr; compiles JUCE C++ components on-the-fly and links them into a running executable</li>
+              <li>&rarr; rapid development of C++ based UI</li>
+              <li>&rarr; <a target="_blank" href="https://youtu.be/imkVkRg-geI?t=124">
+                https://youtu.be/imkVkRg-geI?t=123</a></li>
             </ul>
           </section>
           <section class="section-tl">
-            <img data-src="img/dotnet_logo.png" width="200" height="200" alt="xxx" class="logo-tr">
-            <br><br><br><br>
-            <h3 style="margin: 0px;">LLILC &mdash; a cross compiler</h3>
+            <img data-src="img/Question_mark.svg" width="auto" height="200" alt="xxx" class="logo-tr">
+            <br><br><br>
+            <h3 style="margin: 0px;">StatefulJIT &mdash; a research project</h3>
             <ul>
-              <li>&rarr; LLVM-based compiler for .NET's CoreCLR</li>
-              <li>&rarr; compiles MSIL Byte Code to LLVM IR</li>
-              <li>&rarr; <a target="_blank" href="https://github.com/dotnet/llilc">https://github.com/dotnet/llilc</a></li>
+              <li>&rarr; experimental implementation of a minimalistic language</li>
+              <li>&rarr; playground to evaluate compiler-based techniques for <a href="https://en.wikipedia.org/wiki/Dynamic_software_updating">dynamic software updating</a></li>
+              <li>&rarr; current focus is runtime state transfer</li>
+              <li>&rarr; <a href="https://github.com/weliveindetail/StatefulJit">https://github.com/weliveindetail/StatefulJit</a></li>
             </ul>
           </section>
           <section class="section-tl">
             <h3>Others..</h3>
             <ul>
-              <li>LDC &mdash; compiles D to LLVM IR</li>
-              <li>GHC &mdash; compiles Haskel to LLVM IR</li>
-              SKIR, MapD
+              <li>
+                <a href="https://github.com/ldc-developers/ldc">LDC</a> (LLVM D Compiler):<br>
+                alpha-state D &rarr; LLVM IR
+              </li>
+              <li>
+                <a href="http://llvm.org/pubs/2010-09-HASKELLSYM-LLVM-GHC.pdf">GHC</a> (Glasgow Haskell Compiler):<br>
+                Haskell &rarr; LLVM IR backend<br>available since GHC 7.0 (2010) and quite stable today
+              </li>
+              <li>
+                <a href="https://bitbucket.org/purelang/pure-lang/wiki/Faust2">FAUST</a> (Functional Audio Stream):<br>
+                used to generate C++, now also compiles DSP &rarr; LLVM IR
+              </li>
+              <li>
+                <a href="https://github.com/dotnet/llilc">LLILC</a> (LLVM-based MSIL Compiler):<br>
+                aims to compile .NET's CoreCLR to LLVM IR
+              </li>
+              <li>
+                and so on...
+              </li>
             </ul>
           </section>
         </section>
+
+        <!-- ------------------------------------------------------------------------------------------------------------------ -->
+
 			</div>
 
 		</div>
