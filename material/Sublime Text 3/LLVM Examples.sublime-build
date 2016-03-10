@@ -1,0 +1,23 @@
+// Build System for Sublime Text 3 to compile C using Clang.
+//
+// Usage:
+//   Compile and run via CTRL-b or F7
+//   Compile with CTRL-SHIFT-b
+//
+// Pre-requisities:
+//   - A Unix-like OS (for bash)
+//   - clang must be available on your PATH
+//
+
+{
+    "cmd": ["bash", "-c", "clang++ '${file}' `/usr/local/bin/llvm-config --libs --system-libs` -lz -Wall -std=c++14 -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -o '${file_path}/${file_base_name}' && '${file_path}/${file_base_name}'"],
+    "selector": "source.c",
+    "shell": false,
+    "working_dir": "$file_path",
+    "variants": [
+        {
+            "name": "Run",
+            "cmd": ["clang", "$file", "-o", "${file_base_name}", "-Wall"]
+        }
+    ]
+}

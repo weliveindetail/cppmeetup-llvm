@@ -1,0 +1,18 @@
+LLVM examples with Sublime Text 3
+---------------------------------
+
+Install Sublime Text 3 via brew & cask:
+  $ brew install caskroom/cask/brew-cask
+  $ brew tap caskroom/versions
+  $ brew cask install sublime-text3
+
+Install the latest LLVM libraries, Clang and AddressSanitizer:
+  $ brew install llvm --with-clang --with-asan --HEAD
+
+Move the "LLVM Examples.sublime-build" file to:
+  /Users/<user>/Library/Application Support/Sublime Text 3/Packages/User
+
+Run Sublime Text 3
+Load the HowToUseJIT.cpp from the examples folder 
+From the toolbar select Tools > Build System > LLVM Examples
+Build and run with Cmd+B / Cmd+Shift+B
