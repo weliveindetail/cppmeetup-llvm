@@ -162,7 +162,7 @@
             <h1 style="text-align: center;">Projects</h1>
           </section>
           <section class="section-tl">
-            <img data-src="img/llvm-logo.svg" width="400" height="400" alt="xxx" class="logo-tr">
+            <img data-src="img/projects/llvm-logo.svg" width="400" height="400" alt="xxx" class="logo-tr">
             <br><br><br><br><br>
             <h3 style="margin: 0px;">Clang &mdash; a compiler</h3>
             <a target="_blank" href="http://clang.llvm.org/">http://clang.llvm.org/</a>
@@ -174,7 +174,7 @@
             </ul>
           </section>
           <section class="section-tl">
-            <img data-src="img/root-banner.png" width="529" height="128" alt="xxx" class="logo-tr" style="margin-right: -56px;">
+            <img data-src="img/projects/root-banner.png" width="529" height="128" alt="xxx" class="logo-tr" style="margin-right: -56px;">
             <br><br><br>
             <h3 style="margin: 0px;">Cling &mdash; an interpreter</h3>
             <a target="_blank" href="https://root.cern.ch/cling-brief">https://root.cern.ch/cling-brief</a>
@@ -186,7 +186,7 @@
             <br>
           </section>
           <section class="section-tl">
-            <img data-src="img/google-logo.png" width="200" height="200" alt="xxx" class="logo-tr">
+            <img data-src="img/projects/google-logo.png" width="200" height="200" alt="xxx" class="logo-tr">
             <br><br><br><br>
             <h3 style="margin: 0px;">AddressSanitizer &mdash; a development tool</h3>
             <a target="_blank"
@@ -201,21 +201,7 @@
             </ul>
           </section>
           <section class="section-tl">
-            <img data-src="img/emscripten_logo_full.png" width="408" height="111" alt="xxx" class="logo-tr">
-            <br><br><br>
-            <h3 style="margin: 0px;">Emscripten &mdash; a source-to-source compiler</h3>
-            <a target="_blank"
-               href="https://github.com/kripken/emscripten">
-                     https://github.com/kripken/emscripten</a>
-            <ul>
-              <li>&rarr; compiles C/C++ to asm.js</li>
-              <li>&rarr; examples: Unreal Engine 3, SQLite, Lua VM</li>
-              <li>&rarr; claims to achieve "near-native" speed, but depends largely on use-case and client setup</li>
-              <li>&rarr; <b>note:</b> code size grows rapidly as all dependencies are compiled to JS</li>
-            </ul>
-          </section>
-          <section class="section-tl">
-            <img data-src="img/mapd_banner.png" width="200" height="auto" alt="xxx" class="logo-tr">
+            <img data-src="img/projects/mapd_banner.png" width="200" height="auto" alt="xxx" class="logo-tr">
             <br><br><br><br>
             <h3 style="margin: 0px;">MapD &mdash; a visualization tool for big data</h3>
             <a target="_blank" 
@@ -229,7 +215,36 @@
             </ul>
           </section>
           <section class="section-tl">
-            <img data-src="img/juce-logo.svg" width="200" height="auto" alt="xxx" class="logo-tr">
+            <img data-src="img/projects/emscripten_logo_full.png" width="408" height="111" alt="xxx" class="logo-tr">
+            <br><br><br>
+            <h3 style="margin: 0px;">Emscripten &mdash; a source-to-source compiler</h3>
+            <a target="_blank"
+               href="https://github.com/kripken/emscripten">
+                     https://github.com/kripken/emscripten</a>
+            <ul>
+              <li>&rarr; compiles C/C++ to asm.js</li>
+              <li>&rarr; examples: Unreal Engine 3, SQLite, Lua VM</li>
+              <li>&rarr; claims to achieve "near-native" speed, but depends largely on use-case and client setup</li>
+              <li>&rarr; <b>note:</b> code size grows rapidly, which counteracts efficiency (i.e. in transfer, parsing and locality of reference)</li>
+            </ul>
+          </section>
+          <section class="section-tl">
+            <img data-src="img/projects/wasm-logo.png" width="auto" height="180" alt="xxx" class="logo-tr">
+            <br>
+            <h3 style="margin: 0px;">Binaryen &mdash;<br> the WebAssembly toolchain</h3>
+            <a target="_blank" 
+              href="https://github.com/WebAssembly/binaryen">
+                    https://github.com/WebAssembly/binaryen</a>
+            <ul>
+              <li>&rarr; <b>wasm</b>: portable, size- and load-time-efficient format suitable for compilation to the web</li>
+              <li>&rarr; <b>binaryen</b>: parse &amp; compile to &amp; from wasm, interprete and polyfill (fallback to asm.js)</li>
+              <li>&rarr; implemented as virtual Instruction Set Architecture directly in the upstream LLVM repo</li>
+              <li>&rarr; initial support in clang <a target="_blank" href="http://reviews.llvm.org/rL246814">already merged back</a></li>
+              <li>&rarr; plans are to ship MVP before end of 2016!</li>
+            </ul>
+          </section>
+          <section class="section-tl">
+            <img data-src="img/projects/juce-logo.svg" width="200" height="auto" alt="xxx" class="logo-tr">
             <br><br><br><br><br>
             <h3 style="margin: 0px;">Projucer &mdash; a live coding environment</h3>
             <a target="_blank" href="https://youtu.be/imkVkRg-geI?t=124">
@@ -240,7 +255,7 @@
             </ul>
           </section>
           <section class="section-tl">
-            <img data-src="img/Question_mark.svg" width="auto" height="200" alt="xxx" class="logo-tr">
+            <img data-src="img/projects/Question_mark.svg" width="auto" height="200" alt="xxx" class="logo-tr">
             <br><br><br>
             <h3 style="margin: 0px;">StatefulJIT &mdash; a research project</h3>
             <a target="_blank" href="https://github.com/weliveindetail/StatefulJit">
@@ -248,7 +263,7 @@
             <ul>
               <li>&rarr; experimental implementation of a minimalistic language</li>
               <li>&rarr; playground to evaluate compiler-based techniques for <a href="https://en.wikipedia.org/wiki/Dynamic_software_updating">dynamic software updating</a></li>
-              <li>&rarr; current focus is runtime state transfer</li>
+              <li>&rarr; current focus is runtime state transfer for complex data types</li>
             </ul>
           </section>
           <section class="section-tl">
@@ -265,7 +280,6 @@
               </li>
               <li>
                 <a href="http://llvm.org/pubs/2010-09-HASKELLSYM-LLVM-GHC.pdf">GHC</a>: Glasgow Haskell Compiler<br>
-                <!--  (LLVM backend quite stable today) &rarr; LLVM backend added with GHC 7.0 in 2010-->
               </li>
               <li>
                 <a href="https://bitbucket.org/purelang/pure-lang/wiki/Faust2">FAUST</a>: Functional Audio Stream
