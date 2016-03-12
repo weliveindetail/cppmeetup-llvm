@@ -304,7 +304,28 @@
 
         <section>
           <section>
-            <h1 style="text-align: center;">Architecture</h1>
+            <h1 style="text-align: center;">Compiler Construction Basics</h1>
+          </section>
+          <section>
+            <h3>What is the goal?</h3>
+            <div>
+              <img data-src="img/cc/helloworld_cpp.png" width="300" height="auto" alt="xxx" style="border: 0px; vertical-align: middle;">
+              <span style="font-size: 200px; vertical-align: middle; margin: 50px;">&rarr;</span>
+              <img data-src="img/cc/helloworld_asm.jpg" width="200" height="auto" alt="xxx" style="border: 0px; vertical-align: middle;">
+            </div>
+          </section>
+          <section>
+            <h3>Ok step by step..</h3>
+            Code &rarr; Tokens &rarr; AST &rarr; SSA &rarr; Optimize &arr; DAG &arr; ASM
+          </section>
+        </section>
+
+
+        <!-- ------------------------------------------------------------------------------------------------------------------ -->
+
+        <section>
+          <section>
+            <h1 style="text-align: center;">LLVM Architecture</h1>
           </section>
           <section>
             3-phase design
@@ -315,6 +336,9 @@
             * well-specified
             * not platform specific (but also not necessarily identical on different platforms)
             * source language neutral
+
+            * by itself neither fully portable nor fully stable
+            * designed for compiler optimizations
 
             * compare to GCC on debug info example
 
