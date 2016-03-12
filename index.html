@@ -21,16 +21,35 @@
 		<link rel="stylesheet" href="lib/css/zenburn.css">
 
     <style>
-      .reveal section img.logo-tr { 
+      .reveal .slides section img.logo-tr { 
         border: 0px;
         margin: 0px;
         margin-top: -20px;
         opacity: 1.0;
         float: right; }
 
-      .reveal section.section-tl {
+      .reveal .slides section.section-tl {
         text-align: left;
         vertical-align: top; }
+
+      .reveal .slides section img.replace {
+        width: 0px;
+        height: 0px;
+        margin: 0px;
+        border: 0px;
+        transition: none; }
+
+      .reveal .slides section img.replace.fragment.current-visible {
+        opacity: 0;
+        visibility: hidden;
+        display: none; }
+
+      .reveal .slides section img.replace.fragment.current-visible.current-fragment {
+        opacity: 1;
+        width: 100%;
+        height: auto;
+        visibility: visible;
+        display: inline; }
     </style>
 
 		<!-- Printing and PDF exports -->
@@ -308,15 +327,28 @@
           </section>
           <section>
             <h3>What is the goal?</h3>
-            <div>
+            <div class="fragment" data-fragment-index="1">
               <img data-src="img/cc/helloworld_cpp.png" width="300" height="auto" alt="xxx" style="border: 0px; vertical-align: middle;">
               <span style="font-size: 200px; vertical-align: middle; margin: 50px;">&rarr;</span>
               <img data-src="img/cc/helloworld_asm.jpg" width="200" height="auto" alt="xxx" style="border: 0px; vertical-align: middle;">
             </div>
           </section>
-          <section>
+          <section style="vertical-align: top;">
             <h3>Ok step by step..</h3>
-            Code &rarr; Tokens &rarr; AST &rarr; SSA &rarr; Optimize &arr; DAG &arr; ASM
+            <img class="fragment current-visible replace" frament-index="0" data-src="img/cc/src-to-exec-0.svg" alt="xxx">
+            <img class="fragment current-visible replace" frament-index="1" data-src="img/cc/src-to-exec-1.svg" alt="xxx">
+            <img class="fragment current-visible replace" frament-index="2" data-src="img/cc/src-to-exec-2.svg" alt="xxx">
+            <img class="fragment current-visible replace" frament-index="3" data-src="img/cc/src-to-exec-3.svg" alt="xxx">
+            <br><br><br><br>
+            <!--<p class="fragment" data-fragment-index="4" style="font-size: 200px; text-align: left; margin-top: -150px; padding-left: 165px; color: #d22;">&uarr;</p>-->
+          </section>
+          <section>
+            <h3>The compilation step in detail</h3>
+            <img class="fragment current-visible fade-in replace" frament-index="0" data-src="img/cc/src-to-asm-0.svg" alt="xxx">
+            <img class="fragment current-visible fade-in replace" frament-index="1" data-src="img/cc/src-to-asm-1.svg" alt="xxx">
+            <img class="fragment current-visible fade-in replace" frament-index="2" data-src="img/cc/src-to-asm-2.svg" alt="xxx">
+            <img class="fragment current-visible fade-in replace" frament-index="3" data-src="img/cc/src-to-asm-3.svg" alt="xxx">
+            <br><br><br><br>
           </section>
         </section>
 
