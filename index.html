@@ -18,7 +18,7 @@
 		<link rel="stylesheet" href="css/theme/white.css" id="theme">
 
 		<!-- Code syntax highlighting -->
-		<link rel="stylesheet" href="lib/css/zenburn.css">
+		<link rel="stylesheet" href="lib/css/monokai-sublime.css">
 
     <style>
       .reveal .slides section img.logo-tr { 
@@ -351,8 +351,8 @@
               <img data-src="img/cc/helloworld_asm.jpg" width="200" height="auto" alt="xxx" style="border: 0px; vertical-align: middle;">
             </div>
           </section>
-          <section style="vertical-align: top;">
-            <h3>Ok step by step..</h3>
+          <section>
+            <h3>Native code generation step by step</h3>
             <img class="fragment current-visible replace" frament-index="0" data-src="img/cc/src-to-exec-0.svg" alt="xxx">
             <img class="fragment current-visible replace" frament-index="1" data-src="img/cc/src-to-exec-1.svg" alt="xxx">
             <img class="fragment current-visible replace" frament-index="2" data-src="img/cc/src-to-exec-2.svg" alt="xxx">
@@ -361,66 +361,100 @@
             <!--<p class="fragment" data-fragment-index="4" style="font-size: 200px; text-align: left; margin-top: -150px; padding-left: 165px; color: #d22;">&uarr;</p>-->
           </section>
           <section>
-            <h3>The compilation step in detail</h3>
+            <h3>Phases of compilation</h3>
             <img class="fragment current-visible fade-in replace" frament-index="0" data-src="img/cc/src-to-asm-0.svg" alt="xxx">
             <img class="fragment current-visible fade-in replace" frament-index="1" data-src="img/cc/src-to-asm-1.svg" alt="xxx">
             <img class="fragment current-visible fade-in replace" frament-index="2" data-src="img/cc/src-to-asm-2.svg" alt="xxx">
             <img class="fragment current-visible fade-in replace" frament-index="3" data-src="img/cc/src-to-asm-3.svg" alt="xxx">
+            <img class="fragment current-visible fade-in replace" frament-index="4" data-src="img/cc/src-to-asm-phases.svg" alt="xxx" style="margin-top: -7px;">
             <br><br><br><br>
             <aside class="notes">
               AST: redundancy
               IR: Static Single Assignment / 3-Adress-Code
             </aside>
           </section>
+          <section>
+            <h3>Three-Phase-Design</h3>
+            <div style="width: 50%; height: 300px; margin: 0px 25%; text-align: center;">
+              <img class="fragment current-visible fade-in replace" frament-index="0" data-src="img/arch/three-phase.svg" alt="xxx">
+              <img class="fragment current-visible fade-in replace" frament-index="1" data-src="img/arch/three-phase-ir.svg" alt="xxx">
+            </div>
+            <p class="fragment" frament-index="2">
+            </p>
+            <aside class="notes">
+              boarder set of programmers: better test coverage &amp; more potential contributers
+              different skills for implementing a front-end/optimizer/back-end
+            </aside>
+          </section>
         </section>
-
 
         <!-- ------------------------------------------------------------------------------------------------------------------ -->
 
         <section>
           <section>
-            <h1 style="text-align: center;">LLVM Architecture</h1>
+            <h1>LLVM IR</h1>
           </section>
-          <section>
-            3-phase design
-            compiler basics
-          </section>
-          <section>
-            IR and its role
-            * well-specified
-            * not platform specific (but also not necessarily identical on different platforms)
-            * source language neutral
+          <section class="section-tl">
+            <h3>Example</h3>
+            <pre style="font-size: 0.5em;"><code class="x86asm hljs" style="max-height: 100%;" data-trim>
+; Declare the string constant as a global constant.
+@.str = private unnamed_addr constant [13 x i8] c"hello world\0A\00"
 
-            * by itself neither fully portable nor fully stable
-            * designed for compiler optimizations
+; External declaration of the puts function
+declare i32 @puts(i8* nocapture) nounwind
 
-            * compare to GCC on debug info example
+; Definition of main function
+define i32 @main() {   ; i32()*
+  ; Convert [13 x i8]* to i8  *...
+  %cast210 = getelementptr [13 x i8], [13 x i8]* @.str, i64 0, i64 0
 
-            &rarr; IR language reference
-          </section>
-          <section>
-            Optimizer:
-            * IR is the only interface
-            * single passes
-            * PassManager resolves dependencies and optimizes the execution
+  ; Call puts function to write out the string to stdout.
+  call i32 @puts(i8* %cast210)
+  ret i32 0
+}
 
-            &rarr; writing a pass
+; Named metadata
+!0 = !{i32 42, null, !"string"}
+!foo = !{!0}
+            </code></pre>
           </section>
-          <section>
-            GCC not reusable as library, because it's designed as a monolithic application (no strict separation of frontend/optimizer/backend)
+          <section class="section-tl">
+            <h3>Properties</h3>
+            <ul>
+              <li>&rarr; Static Single Assignment (SSA)</li>
+              <li>&rarr; type safety, low-level operations, flexibility</li>
+              <li>&rarr; source language neutral</li>
+              <li>&rarr; not platform specific</li>
+              <li>&rarr; <a target="_blank" href="http://llvm.org/docs/LangRef.html">http://llvm.org/docs/LangRef.html</a></li>
+            </ul>
+            <aside class="notes">
+              * can hold meta data, e.g. debug info! unlike GCC's GIMPLE --> accesses front-end AST
+            </aside>
           </section>
-          <section>
-            JVM and .Net are opaque virtual machines (optimizer - backend not modular)
+          <section class="section-tl">
+            <h3>Representations</h3>
+            <ul>
+              <li>&rarr; in-memory compiler IR</li>
+              <li>&rarr; on-disk bitcode representation</li>
+              <li>&rarr; human readable text form</li>
+            </ul>
+            <aside class="notes">
+              Optimization for:
+              * fast access/processing
+              * fast serialization/deserialization
+              * readablility
+            </aside>
           </section>
-          <section>
-            However, from the scientific point of view there is nothing new in LLVM. Three-Phase-Design is well understood and implemented in other experimental compilers like SUIF, but more specific research and not production ready.
-
-            LLVM came at the right time and did the right thing!
-            * 
-            * native programming is back! interest and investing in C++ and COMPILERS grows again since 2010
-            * many new architectures for mobile processors and GPUs
-            * static compilers and runtime compilers in one framework
-            * high demand for build tools, which benefit a lot from LLVM modularity
+          <section class="section-tl">
+            <h3>Restrictions</h3>
+            <ul>
+              <li>&rarr; designed for compiler optimizations</li>
+              <li>&rarr; neither fully portable nor fully stable</li>
+            </ul>
+            <aside class="notes">
+              * not necessarily identical on different platforms
+              * Google (Portable) Native Client ---> issues
+            </aside>
           </section>
         </section>
 
@@ -431,8 +465,17 @@
             <h1 style="text-align: center;">Conceptual Advantages</h1>
           </section>
           <section>
+            <h3>Reusability!</h3>
             reuse the libraries in your project: demo HowToJIT example in sublime
             compiler basic: compile-time vs. runtime! interesting and challenging!
+          </section>
+          <section>
+            Optimizer:
+            * IR is the only interface
+            * single passes
+            * PassManager resolves dependencies and optimizes the execution
+
+            &rarr; writing a pass
           </section>
           <section>
             Link-Time Optimization
@@ -455,6 +498,22 @@
             ** e.g. test constant folding pass individually
             ** verify that it actually performed!
             ** not possible with the c file appraoch, as front-ends may optimize constant folding too
+          </section>
+          <section>
+            GCC not reusable as library, because it's designed as a monolithic application (no strict separation of frontend/optimizer/backend)
+          </section>
+          <section>
+            JVM and .Net are opaque virtual machines (optimizer - backend not modular)
+          </section>
+          <section>
+            However, from the scientific point of view there is nothing new in LLVM. Three-Phase-Design is well understood and implemented in other experimental compilers like SUIF, but more specific research and not production ready.
+
+            LLVM came at the right time and did the right thing!
+            * 
+            * native programming is back! interest and investing in C++ and COMPILERS grows again since 2010
+            * many new architectures for mobile processors and GPUs
+            * static compilers and runtime compilers in one framework
+            * high demand for build tools, which benefit a lot from LLVM modularity
           </section>
         </section>
 
@@ -560,7 +619,7 @@
 				history: true,
 				center: true,
 
-				transition: 'slide', // none/fade/slide/convex/concave/zoom
+				transition: 'concave', // none/fade/slide/convex/concave/zoom
 
 				// Optional reveal.js plugins
 				dependencies: [
