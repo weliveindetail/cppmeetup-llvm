@@ -32,6 +32,13 @@
         text-align: left;
         vertical-align: top; }
 
+      .reveal .slides section img.abspos {
+        position: absolute;
+        width: 200px;
+        height: auto;
+        margin: 0px;
+        border: 0px; }
+
       .reveal .slides section img.replace {
         width: 0px;
         height: 0px;
@@ -138,7 +145,7 @@
             <br>
             &rarr; widely used as a synonym for <b style="color: #c33;">Runtime Compiler</b>
             <br>
-            &rarr; AOT (ahead of time compilation) is the term's opposite using a <b style="color: #c33;">Static Compiler</b>
+            &rarr; AOT means <b style="color: #c33;">Static Compiler</b>
           </section>
           <section style="text-align: left;">
             <h3>Difference Static vs. Runtime Compiler?</h3>
@@ -323,7 +330,18 @@
 
         <section>
           <section>
-            <h1 style="text-align: center;">Compiler Construction Basics</h1>
+            <br><br><br>
+            <h3 style="text-align: left;">Slight detour to...</h3>
+            <h1 style="text-align: center;">Compiler<br>Construction</h1>
+
+            <img class="fragment fade-in abspos" style="left: 3%; top: 60%;" frament-index="0" data-src="img/cc/books/0.jpg" alt="xxx">
+            <img class="fragment fade-in abspos" style="left: 55%; top: 55%;" frament-index="1" data-src="img/cc/books/1.jpg" alt="xxx">
+            <img class="fragment fade-in abspos" style="left: 30%; top: 45%;" frament-index="2" data-src="img/cc/books/2.jpg" alt="xxx">
+            <img class="fragment fade-in abspos" style="left: 80%; top: 20%;" frament-index="3" data-src="img/cc/books/3.jpg" alt="xxx">
+
+            <aside class="notes">
+              Well-understood in computer science
+            </aside>
           </section>
           <section>
             <h3>What is the goal?</h3>
@@ -349,6 +367,10 @@
             <img class="fragment current-visible fade-in replace" frament-index="2" data-src="img/cc/src-to-asm-2.svg" alt="xxx">
             <img class="fragment current-visible fade-in replace" frament-index="3" data-src="img/cc/src-to-asm-3.svg" alt="xxx">
             <br><br><br><br>
+            <aside class="notes">
+              AST: redundancy
+              IR: Static Single Assignment / 3-Adress-Code
+            </aside>
           </section>
         </section>
 
@@ -440,43 +462,6 @@
 
         <section>
           <section>
-            <h1 style="text-align: center;">Learning from LLVM</h1>
-          </section>
-          <section class="section-tl">
-            <blockquote cite="http://www.aosabook.org/en/llvm.html">
-              None of the subsystems in LLVM are really good until they have been rewritten at least once.
-            </blockquote>
-            <blockquote cite="http://www.aosabook.org/en/llvm.html">
-              After all, the goal isn't to be perfect, it is to keep getting better over time.
-              <cite>Chris Lattner</cite>
-            </blockquote>
-          </section>
-          <section class="section-tl">
-            LLVM Coding Standards  "you only pay for what you use" approach
-            http://llvm.org/docs/CodingStandards.html
-
-            * good structure great reasoning
-            * few style conventions like naming and bracing
-          </section>
-            Hand-rolled RTTI
-            http://llvm.org/docs/HowToSetUpLLVMStyleRTTI.html
-
-            * more efficient and flexible
-            * fully explicit &rarr; use only where necessary
-            * no implicit limitations
-          <section class="section-tl">
-            Bugpoint
-            http://llvm.org/docs/Bugpoint.html
-
-            * automatically reduces the amount of code necessary to reproduce a bug
-            * trade off programmer time for computer time in the compiler-debugging process
-          </section>
-        </section>
-
-        <!-- ------------------------------------------------------------------------------------------------------------------ -->
-
-        <section>
-          <section>
             <h1 style="text-align: center;">Setup and tutorials</h1>
           </section>
           <section class="section-tl">
@@ -493,6 +478,8 @@
             explorative C++ coding &rarr; medium
             start from scratch with the HowToJIT example
             !! make github repo !!
+
+            <code>git clone http://github.com/weliveindetail/HowToJitFromScratch</code>
           </section>
           <section class="section-tl">
             requires some compiler and IR knowhow &rarr; advanced
@@ -511,10 +498,48 @@
             <h1 style="text-align: center;">Experimenting with a JIT Compiler</h1>
           </section>
           <section class="section-tl">
-            setup llvm (build and install)
-            mac and simple: brew install llvm
-            others: http://llvm.org/docs/CMake.html
+            whatever &rarr; LLVM IR &rarr; executable code &rarr; function pointer
           </section>
+        </section>
+
+        <!-- ------------------------------------------------------------------------------------------------------------------ -->
+
+        <section>
+          <section>
+            <h1 style="text-align: center;">Learning from LLVM</h1>
+          </section>
+          <section class="section-tl">
+            <blockquote cite="http://www.aosabook.org/en/llvm.html">
+              None of the subsystems in LLVM are really good until they have been rewritten at least once.
+            </blockquote>
+            <blockquote cite="http://www.aosabook.org/en/llvm.html">
+              After all, the goal isn't to be perfect, it is to keep getting better over time.
+              <cite>Chris Lattner</cite>
+            </blockquote>
+          </section>
+          <section class="section-tl">
+            LLVM Coding Standards  "you only pay for what you use" approach
+            http://llvm.org/docs/CodingStandards.html
+
+            * good structure great reasoning
+            * few style conventions like naming and bracing
+          </section>
+          <section>
+            Hand-rolled RTTI
+            http://llvm.org/docs/HowToSetUpLLVMStyleRTTI.html
+
+            * more efficient and flexible
+            * fully explicit &rarr; use only where necessary
+            * no implicit limitations
+          </section>
+          <section class="section-tl">
+            Bugpoint
+            http://llvm.org/docs/Bugpoint.html
+
+            * automatically reduces the amount of code necessary to reproduce a bug
+            * trade off programmer time for computer time in the compiler-debugging process
+          </section>
+        </section>
 
         <!-- ------------------------------------------------------------------------------------------------------------------ -->
 
