@@ -21,6 +21,9 @@
 		<link rel="stylesheet" href="lib/css/monokai-sublime.css">
 
     <style>
+      .reveal .slides section code {
+        font-size: 0.8em; }
+
       .reveal .slides section img.logo-tr { 
         border: 0px;
         margin: 0px;
@@ -99,12 +102,12 @@
                   stefan.graenitz@gmail.com
                 </a>
                 <br>
-                <a href="https://twitter.com/weliveindetail">
+                <a target="_blank" href="https://twitter.com/weliveindetail">
                   <img data-src="img/icons/grey-github.png" alt="xxx" style="border: 0px; width: 24px; height: 24px; margin: 2px;">
                   github.com/weliveindetail
                 </a>
                 <br>
-                <a href="https://twitter.com/weliveindetail">
+                <a target="_blank" href="https://twitter.com/weliveindetail">
                   <img data-src="img/icons/grey-twitter.png" alt="xxx" style="border: 0px; width: 24px; height: 24px; margin: 2px;">
                   @weliveindetail
                 </a>
@@ -309,7 +312,10 @@
                                      https://github.com/weliveindetail/StatefulJit</a>
             <ul>
               <li>&rarr; experimental implementation of a minimalistic language</li>
-              <li>&rarr; playground to evaluate compiler-based techniques for <a href="https://en.wikipedia.org/wiki/Dynamic_software_updating">dynamic software updating</a></li>
+              <li>
+                &rarr; playground to evaluate compiler-based techniques for 
+                <a target="_blank" href="https://en.wikipedia.org/wiki/Dynamic_software_updating">dynamic software updating</a>
+              </li>
               <li>&rarr; current focus is runtime state transfer for complex data types</li>
             </ul>
           </section>
@@ -317,28 +323,36 @@
             <h3>Others..</h3>
             <ul>
               <li>
-                <a href="https://github.com/ldc-developers/ldc">LDC</a>: LLVM D Compiler (alpha-state)
+                <a target="_blank" href="https://github.com/ldc-developers/ldc">LDC</a>:
+                LLVM D Compiler (alpha-state)
               </li>
               <li>
-                <a href="https://www.rust-lang.org/">Rust</a>: systems programming language
+                <a target="_blank" href="https://www.rust-lang.org/">Rust</a>:
+                systems programming language
               </li>
               <li>
-                <a href="https://developer.apple.com/swift/">Swift</a>: Apple's attempt to replace Objective-C
+                <a target="_blank" href="https://developer.apple.com/swift/">Swift</a>:
+                Apple's attempt to replace Objective-C
               </li>
               <li>
-                <a href="http://llvm.org/pubs/2010-09-HASKELLSYM-LLVM-GHC.pdf">GHC</a>: Glasgow Haskell Compiler<br>
+                <a target="_blank" href="http://llvm.org/pubs/2010-09-HASKELLSYM-LLVM-GHC.pdf">GHC</a>:
+                Glasgow Haskell Compiler<br>
               </li>
               <li>
-                <a href="https://bitbucket.org/purelang/pure-lang/wiki/Faust2">FAUST</a>: Functional Audio Stream
+                <a target="_blank" href="https://bitbucket.org/purelang/pure-lang/wiki/Faust2">FAUST</a>:
+                Functional Audio Stream
               </li>
               <li>
-                <a href="https://github.com/rubinius/rubinius">Rubinius</a>: high-performance env. for running Ruby code
+                <a target="_blank" href="https://github.com/rubinius/rubinius">Rubinius</a>:
+                high-performance env. for running Ruby code
               </li>
               <li>
-                <a href="https://github.com/dotnet/llilc">LLILC</a>: aims to compile .NET's CoreCLR to LLVM IR<br>
+                <a target="_blank" href="https://github.com/dotnet/llilc">LLILC</a>:
+                aims to compile .NET's CoreCLR to LLVM IR<br>
               </li>
               <li>
-                <a href="http://vuo.org/node/31">Vuo</a>: Visual programming environment
+                <a target="_blank" href="http://vuo.org/node/31">Vuo</a>:
+                Visual programming environment
               </li>
               <li>
                 and so on...
@@ -403,8 +417,10 @@
             <p class="fragment" frament-index="2">
             </p>
             <aside class="notes">
-              boarder set of programmers: better test coverage &amp; more potential contributers
-              different skills for implementing a front-end/optimizer/back-end
+              * boarder set of programmers: better test coverage &amp; more potential contributers
+              * different skills for implementing a front-end/optimizer/back-end
+              * GCC not reusable as library, because it's designed as a monolithic application (no strict separation of frontend/optimizer/backend)
+              * JVM and .Net are opaque virtual machines (optimizer - backend not modular)
             </aside>
           </section>
         </section>
@@ -485,56 +501,87 @@ define i32 @main() {   ; i32()*
           <section>
             <h1 style="text-align: center;">Conceptual Advantages</h1>
           </section>
-          <section>
-            <h3>Reusability!</h3>
-            reuse the libraries in your project: demo HowToJIT example in sublime
-            compiler basic: compile-time vs. runtime! interesting and challenging!
+          <section class="section-tl">
+            <h3>Reusability is the key</h3>
+            <ul>
+              <li>&rarr; extremely reuse-friendly:<br>due to modular design and permissive license</li>
+              <li>&rarr; static compilers and runtime compilers in one framework</li>
+              <li>&rarr; large active community:<br>
+                  <a target="_blank" href="http://lists.llvm.org/pipermail/llvm-dev/">http://lists.llvm.org/pipermail/llvm-dev/</a><br>
+                  <a target="_blank" href="http://lists.llvm.org/pipermail/cfe-dev/">http://lists.llvm.org/pipermail/cfe-dev/</a></li>
+              <li>&rarr; in your own project? maybe tomorrow!</li>
+              <li>&rarr; <b>demo time!</b></li>
+            </ul>
+            <aside class="notes">
+            </aside>
           </section>
-          <section>
-            Optimizer:
-            * IR is the only interface
-            * single passes
-            * PassManager resolves dependencies and optimizes the execution
+          <section class="section-tl">
+            <h3>Modular Optimizer</h3>
+            <ul>
+              <li>&rarr; IR is the only interface</li>
+              <li>&rarr; pipeline of distinct optimization passes</li>
+              <li>&rarr; pass manager for dependency resolution and scheduling</li>
+              <li>&rarr; <a target="_blank" href="http://llvm.org/docs/WritingAnLLVMPass.html">
+                                                  http://llvm.org/docs/WritingAnLLVMPass.html</a></li>
+            </ul>
+          </section>
+          <section class="section-tl">
+            <h3>Link-Time Optimization</h3>
+            <img data-src="img/aosa/LTO.png" alt="xxx" width="100%" height="auto" style="border: 0px;">
+            <ul>
+              <li>&rarr; no expensive serialization (naturally)</li>
+              <li>&rarr; across different source languages</li>
+            </ul>
+          </section>
+          <section class="section-tl">
+            <h3>Install-Time Optimization</h3>
+            <img data-src="img/aosa/ITO.png" alt="xxx" width="100%" height="auto" style="border: 0px;">
+            <ul>
+              <li>&rarr; delay codegen to installation (still AOT)</li>
+              <li>&rarr; instruction selection &amp; scheduling for specific machine</li>
+            </ul>
+          </section>
+          <section class="section-tl">
+            <h3>Unit Testing the Optimizer</h3>
 
-            &rarr; writing a pass
+            With textual IR &amp; modular optimizer:
+            <ul>
+              <li>&rarr; unit tests for single optimization passes!</li>
+              <li>&rarr; e.g. make sure constant folding actually performed</li>
+              <li>&rarr; typical problem with source code files as input: front-ends do constant folding too!</li>
+            </ul>
+            <aside class="notes">
+              Traditional approaches:
+              * run .c file through compiler to test that it doesn't crash (GCC)
+              * compile huge programs with nightly builds and run automated user-interactions (MSVC)
+            </aside>
           </section>
-          <section>
-            Link-Time Optimization
-            * no expensive serialization (naturally not required)
-            * across different source languages
+          <section class="section-tl">
+            <h3>Why LLVM? Why now?</h3>
+            <ul>
+              <li>&rarr; people build compilers since 1952</li>
+              <li>&rarr; from the scientific point of view there is nothing new</li>
+            </ul>
+            <aside class="notes">
+              * first compiler by Grace Hopper
+              * first FORTRAN compiler released in 1957 - took 18 person-years
+              * similar IR's in JVM and .Net
+              * Three-Phase-Design is well understood and implemented in other experimental compilers like SUIF, but more specific research and not production ready
+            </aside>
           </section>
-          <section>
-            Install-Time Optimization
-            * delay codegen to installation
-            * match instruction choice, scheduling to the specific machine's hardware
-          </section>
-          <section>
-            Unit Testing the Optimizer
-
-            * traditional approaches: 
-            ** run .c file through compiler to test that it doesn't crash (GCC)
-            ** compile huge programs with nightly builds and run automated user-interactions (MSVC)
-
-            * textual LLVM IR &amp; modular optimizer:
-            ** e.g. test constant folding pass individually
-            ** verify that it actually performed!
-            ** not possible with the c file appraoch, as front-ends may optimize constant folding too
-          </section>
-          <section>
-            GCC not reusable as library, because it's designed as a monolithic application (no strict separation of frontend/optimizer/backend)
-          </section>
-          <section>
-            JVM and .Net are opaque virtual machines (optimizer - backend not modular)
-          </section>
-          <section>
-            However, from the scientific point of view there is nothing new in LLVM. Three-Phase-Design is well understood and implemented in other experimental compilers like SUIF, but more specific research and not production ready.
-
-            LLVM came at the right time and did the right thing!
-            * 
-            * native programming is back! interest and investing in C++ and COMPILERS grows again since 2010
-            * many new architectures for mobile processors and GPUs
-            * static compilers and runtime compilers in one framework
-            * high demand for build tools, which benefit a lot from LLVM modularity
+          <section class="section-tl">
+            <h3>In the right spot at the right time!</h3>
+            <ul>
+              <li>&rarr; native programming is back!</li>
+              <li>&rarr; many new architectures for mobile processors and GPUs</li>
+              <li>&rarr; instead of getting clocked faster, instruction sets are getting weirder</li>
+              <li>&rarr; high demand for compiler-based build tools</li>
+            </ul>
+            <aside class="notes">
+              * interest and investing in C++ and compilers grows again since 2010
+              * existing C++ compilers lack extensibility, while new standards arise
+              * weirder: instruction-level parallelism with VeryLongInstructionWords, Vectorization, massively parallel GPUs
+            </aside>
           </section>
         </section>
 
@@ -542,43 +589,97 @@ define i32 @main() {   ; i32()*
 
         <section>
           <section>
-            <h1 style="text-align: center;">Setup and tutorials</h1>
+            <h1 style="text-align: center;">Getting Started</h1>
           </section>
           <section class="section-tl">
-            setup llvm (build and install)
-            mac and simple: brew install llvm
-            others: http://llvm.org/docs/CMake.html
+            <h3>Setup</h3>
+            <ul>
+              <li>
+                &rarr; Build from source with CMake:<br>
+                <a target="_blank" href="http://llvm.org/docs/CMake.html">http://llvm.org/docs/CMake.html</a><br>
+                <a target="_blank" href="http://clang.llvm.org/get_started.html">http://clang.llvm.org/get_started.html</a>
+              </li>
+              <li>
+                &rarr; Pre-built binaries:<br>
+                <a traget="_blank" href="http://llvm.org/releases/download.html">http://llvm.org/releases/download.html</a>
+              </li>
+              <li>
+                &rarr; Homebrew on Mac:<br>
+                <code>
+                  $ brew install llvm --with-clang --with-asan
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                                      --with-libcxx --HEAD
+                </code>
+              </li>
+              <li>
+                &rarr; Scoop on Windows:<br>
+                <code>$ scoop install llvm</code>
+              </li>
+            </ul>
           </section>
           <section class="section-tl">
-            guided C++ coding &rarr; easy
-            learn how to write a parser to translate your representation to LLVM
-            http://llvm.org/docs/tutorial/index.html
-          </section>
-          <section class="section-tl">
-            explorative C++ coding &rarr; medium
-            start from scratch with the HowToJIT example
-            !! make github repo !!
+            <h3>Checkout the tools</h3>
 
-            <code>git clone http://github.com/weliveindetail/HowToJitFromScratch</code>
+            See what IR clang generates from C++
+            <ul>
+              <li>
+                &rarr; browser: 
+                <a target="_blank" href="http://ellcc.org/demo/index.cgi">
+                                         http://ellcc.org/demo/index.cgi</a>
+              </li>
+              <li>
+                &rarr; bash: <code>$ clang++ -S -emit-llvm foo.cpp</code>
+              </li>
+            </ul>
+            <br>
+            Run your IR to see what it does:
+            <ul>
+              <li>
+                &rarr; browser: 
+                <a target="_blank" href="http://kripken.github.io/llvm.js/demo.html">
+                                         http://kripken.github.io/llvm.js/demo.html</a>
+              </li>
+              <li>
+                &rarr; bash: <code>$ lli foo.ll</code>
+              </li>
+            </ul>
           </section>
           <section class="section-tl">
-            requires some compiler and IR knowhow &rarr; advanced
-            learn how to write an optimization pass
-            http://llvm.org/docs/tutorial/index.html
-
-            * useful for custom optimizations
-            * useful for binary instrumentation
-          </section>
-        </section>
-
-        <!-- ------------------------------------------------------------------------------------------------------------------ -->
-
-        <section>
-          <section>
-            <h1 style="text-align: center;">Experimenting with a JIT Compiler</h1>
+            <h3 style="margin: 0px;">Explore code generation</h3>
+            <a target="_blank" href="http://github.com/weliveindetail/JitFromScratch">
+                                     http://github.com/weliveindetail/JitFromScratch</a>
+            <ul>
+              <li>&rarr; get familiar with the API for IR codegen</li>
+              <li>&rarr; general approach is <i>"see how clang does it"</i></li>
+              <li>&rarr; few answers on stackoverflow</li>
+              <li>&rarr; can be challenging</li>
+            </ul>
           </section>
           <section class="section-tl">
-            whatever &rarr; LLVM IR &rarr; executable code &rarr; function pointer
+            <h3 style="margin: 0px;">Learn basic front-end construction</h3>
+            <a target="_blank" href="http://llvm.org/docs/tutorial/index.html">
+                                     http://llvm.org/docs/tutorial/index.html</a>
+            <ul>
+              <li>&rarr; guided conventional C++ coding</li>
+              <li>&rarr; great starting point for language experiments</li>
+              <li>&rarr; focus is on functionality, not on good style!</li>
+              <li>&rarr; easy but time-consuming</li>
+            </ul>
+          </section>
+          <section class="section-tl">
+            <h3 style="margin: 0px;">Learn how to write a pass</h3>
+            <a target="_blank" href="http://llvm.org/docs/WritingAnLLVMPass.html">
+                                     http://llvm.org/docs/WritingAnLLVMPass.html</a>
+            <ul>
+              <li>&rarr; guided C++ coding</li>
+              <li>&rarr; requires some compiler and IR insight</li>
+              <li>&rarr; useful for optimization or instrumentation</li>
+              <li>&rarr; advanced</li>
+            </ul>
           </section>
         </section>
 
@@ -598,26 +699,66 @@ define i32 @main() {   ; i32()*
             </blockquote>
           </section>
           <section class="section-tl">
-            LLVM Coding Standards  "you only pay for what you use" approach
-            http://llvm.org/docs/CodingStandards.html
-
-            * good structure great reasoning
-            * few style conventions like naming and bracing
-          </section>
-          <section>
-            Hand-rolled RTTI
-            http://llvm.org/docs/HowToSetUpLLVMStyleRTTI.html
-
-            * more efficient and flexible
-            * fully explicit &rarr; use only where necessary
-            * no implicit limitations
+            <h3 style="margin: 0px;">LLVM Coding Standards</h3>
+            <a target="_blank" href="http://llvm.org/docs/CodingStandards.html">
+                                     http://llvm.org/docs/CodingStandards.html</a>
+            <ul>
+              <li>&rarr; good coverage, great reasoning</li>
+              <li>&rarr; few style conventions like naming and bracing</li>
+              <li>&rarr; <i>"only pay for what you use"</i> compatible</li>
+            </ul>
           </section>
           <section class="section-tl">
-            Bugpoint
-            http://llvm.org/docs/Bugpoint.html
+            <h3 style="margin: 0px;">Hand-rolled RTTI</h3>
+            <a target="_blank" href="http://llvm.org/docs/HowToSetUpLLVMStyleRTTI.html">
+                                     http://llvm.org/docs/HowToSetUpLLVMStyleRTTI.html</a>
 
-            * automatically reduces the amount of code necessary to reproduce a bug
-            * trade off programmer time for computer time in the compiler-debugging process
+            <pre style="width: 99%;"><code class="cpp hljs" data-trim>
+static bool isLoopInvariant(const Value *V, const Loop *L) {
+  if (isa&lt;Constant&gt;(V) || isa&lt;Argument&gt;(V) || isa&lt;GlobalValue&gt;(V))
+    return true;
+
+  // Otherwise, it must be an instruction...
+  return !L->contains(cast&lt;Instruction&gt;(V)->getParent());
+}
+            </code></pre>
+
+            <ul>
+              <li>&rarr; more efficient and flexible then built-in RTTI</li>
+              <li>&rarr; fully explicit &mdash; use only where necessary</li>
+              <li>&rarr; no implicit limitations</li>
+            </ul>
+            <aside class="notes">
+              * built-in RTTI limitation: dynamic_cast only works on classes that have a v-table
+            </aside>
+          </section>
+          <section class="section-tl">
+            <h3 style="margin: 0px;"><code>ilist&lt;T&gt;</code> &mdash; an intrusive doubly-linked list</h3>
+            <a target="_blank" style="font-size: 0.9em;" href="http://llvm.org/docs/ProgrammersManual.html#llvm-adt-ilist-h">
+                                     http://llvm.org/docs/ProgrammersManual.html#llvm-adt-ilist-h</a>
+
+            <ul>
+              <li>&rarr; used for Instructions, BasicBlocks, etc.</li>
+              <li>&rarr; minimum-overhead (never touch the heap)</li>
+              <li>&rarr; efficiently stores polymorphic objects</li>
+              <li>&rarr; no invalidation on modification &amp; constant-time splice</li>
+              <li>&rarr; STL-compliant &amp; recently <a target="_blank" href="https://groups.google.com/forum/#!topic/llvm-dev/wGBO6J-ttZQ">cleaned up</a></li>
+            </ul>
+
+            <aside class="notes">
+              * traversal logic requires no knowledge of the downcast nodes
+              * never touch the heap
+            </aside>
+          </section>
+          <section class="section-tl">
+            <h3 style="margin: 0px;">Bugpoint</h3>
+            <a target="_blank" href="http://llvm.org/docs/Bugpoint.html">
+                                     http://llvm.org/docs/Bugpoint.html</a>
+
+            <ul>
+              <li>&rarr; automatically reduces the amount of code necessary to reproduce a bug</li>
+              <li>&rarr; trade off programmer time for computer time</li>
+            </ul>
           </section>
         </section>
 
