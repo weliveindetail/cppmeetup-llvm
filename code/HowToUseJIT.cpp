@@ -1,44 +1,9 @@
-//===-- examples/HowToUseJIT/HowToUseJIT.cpp - An example use of the JIT --===//
-//
-//                     The LLVM Compiler Infrastructure
-//
-// This file is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
-//
-//===----------------------------------------------------------------------===//
-//
-//  This small program provides an example of how to quickly build a small
-//  module with two functions and execute it with the JIT.
-//
-// Goal:
-//  The goal of this snippet is to create in the memory
-//  the LLVM module consisting of two functions as follow: 
-//
-// int add1(int x) {
-//   return x+1;
-// }
-//
-// int foo() {
-//   return add1(10);
-// }
-//
-// then compile the module via JIT, then execute the `foo'
-// function and return result to a driver, i.e. to a "host program".
-//
-// Some remarks and questions:
-//
-// - could we invoke some code using noname functions too?
-//   e.g. evaluate "foo()+foo()" without fears to introduce
-//   conflict of temporary function name with some real
-//   existing function name?
-//
-//===----------------------------------------------------------------------===//
+// source: https://github.com/weliveindetail/cppmeetup-llvm/blob/master/code/HowToUseJIT.cpp
+// based on: examples/HowToUseJIT/HowToUseJIT.cpp
 
-#include "llvm/ADT/STLExtras.h"
 #include "llvm/ExecutionEngine/GenericValue.h"
 #include "llvm/ExecutionEngine/Interpreter.h"
 #include "llvm/IR/Constants.h"
-#include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/LLVMContext.h"
@@ -47,91 +12,107 @@
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/Support/raw_ostream.h"
 
-using namespace llvm;
+llvm::LLVMContext Ctx;
+llvm::IRBuilder<> Builder(Ctx);
 
-auto testAuto()
+// ---------------------------------------------------------- Declare functions
+
+llvm::Function* declareFunctionAddConst(llvm::Module* module)
 {
-  return 1;
+  using namespace llvm;
+
+  auto* name = "addConst";
+  auto* returnTy = Type::getInt32Ty(Ctx);
+  auto* argumentTy = Type::getInt32Ty(Ctx);
+  auto* signature = FunctionType::get(returnTy, { argumentTy }, false);
+  auto  linkage = Function::PrivateLinkage;
+
+  auto* function = Function::Create(signature, linkage, name, module);
+
+  // set argument name to make IR more readable
+  Argument* firstArg = &*function->arg_begin();
+  firstArg->setName("Increment");
+
+  return function;
 }
 
-int main() {
-  
-  InitializeNativeTarget();
+llvm::Function* declareFunctionFoo(llvm::Module* module)
+{
+  using namespace llvm;
 
-  LLVMContext Context;
-  
-  // Create some module to put our function into it.
-  std::unique_ptr<Module> Owner = make_unique<Module>("test", Context);
-  Module *M = Owner.get();
+  auto* name = "foo";
+  auto* returnTy = Type::getInt32Ty(Ctx);
+  auto* signature = FunctionType::get(returnTy, false);
+  auto  linkage = Function::PrivateLinkage;
 
-  // Create the add1 function entry and insert this entry into module M.  The
-  // function will have a return type of "int" and take an argument of "int".
-  // The '0' terminates the list of argument types.
-  Function *Add1F =
-    cast<Function>(M->getOrInsertFunction("add1", Type::getInt32Ty(Context),
-                                          Type::getInt32Ty(Context),
-                                          nullptr));
+  return Function::Create(signature, linkage, name, module);
+}
 
-  // Add a basic block to the function. As before, it automatically inserts
-  // because of the last argument.
-  BasicBlock *BB = BasicBlock::Create(Context, "EntryBlock", Add1F);
+// ------------------------------------------------------------------ Emit code
 
-  // Create a basic block builder with default parameters.  The builder will
-  // automatically append instructions to the basic block `BB'.
-  IRBuilder<> builder(BB);
+void emitCodeAddConst(llvm::Function* decl, int incr)
+{
+  Builder.SetInsertPoint(
+    llvm::BasicBlock::Create(Ctx, "addConstBlock", decl));
 
-  // Get pointers to the constant `1'.
-  Value *One = builder.getInt32(1);
+  // params for add instruction
+  llvm::Value* firstArg = &*decl->arg_begin();
+  llvm::Value* increment = llvm::ConstantInt::get(firstArg->getType(), incr);
 
-  // Get pointers to the integer argument of the add1 function...
-  assert(Add1F->arg_begin() != Add1F->arg_end()); // Make sure there's an arg
-  Argument *ArgX = &*Add1F->arg_begin();          // Get the arg
-  ArgX->setName("AnArg");            // Give it a nice symbolic name for fun.
+  llvm::Value* addInstr = Builder.CreateAdd(increment, firstArg);
+  Builder.CreateRet(addInstr);
+}
 
-  // Create the add instruction, inserting it into the end of BB.
-  Value *Add = builder.CreateAdd(One, ArgX);
+void emitCodeFoo(llvm::Function* decl, llvm::Function* addConst)
+{
+  Builder.SetInsertPoint(
+    llvm::BasicBlock::Create(Ctx, "fooBlock", decl));
 
-  // Create the return instruction and add it to the basic block
-  builder.CreateRet(Add);
+  // insert call to the addConst function
+  llvm::Type* tenTy = llvm::Type::getInt32Ty(Ctx);
+  llvm::Value* tenVal = llvm::ConstantInt::get(tenTy, 10);
+  llvm::CallInst* returnVal = Builder.CreateCall(addConst, tenVal);
 
-  // Now, function add1 is ready.
+  // set hint for tail optimization
+  returnVal->setTailCall(true);
 
-  // Now we're going to create function `foo', which returns an int and takes no
-  // arguments.
-  Function *FooF =
-    cast<Function>(M->getOrInsertFunction("foo", Type::getInt32Ty(Context),
-                                          nullptr));
+  Builder.CreateRet(returnVal);
+}
 
-  // Add a basic block to the FooF function.
-  BB = BasicBlock::Create(Context, "EntryBlock", FooF);
+// --------------------------------------------------------------------- Driver
 
-  // Tell the basic block builder to attach itself to the new basic block
-  builder.SetInsertPoint(BB);
+llvm::Function* codegenIR(llvm::Module* module, int constIncrement)
+{
+  llvm::Function* fnFoo = declareFunctionFoo(module);
+  llvm::Function* fnAddConst = declareFunctionAddConst(module);
 
-  // Get pointer to the constant `10'.
-  Value *Ten = builder.getInt32(10);
+  emitCodeAddConst(fnAddConst, constIncrement);
+  emitCodeFoo(fnFoo, fnAddConst);
 
-  // Pass Ten to the call to Add1F
-  CallInst *Add1CallRes = builder.CreateCall(Add1F, Ten);
-  Add1CallRes->setTailCall(true);
+  return fnFoo;
+}
 
-  // Create the return instruction and add it to the basic block.
-  builder.CreateRet(Add1CallRes);
+int main(int argc, char** argv)
+{
+  llvm::InitializeNativeTarget();
+  int runtimeConst = (argc > 1) ? atoi(argv[1]) : 1;
 
-  // Now we create the JIT.
-  ExecutionEngine* EE = EngineBuilder(std::move(Owner)).create();
+  auto module = std::make_unique<llvm::Module>("test", Ctx);
+  auto function = codegenIR(module.get(), runtimeConst);
 
-  outs() << "We just constructed this LLVM module:\n\n" << *M;
-  outs() << "\n\nRunning foo: ";
-  outs().flush();
+  llvm::outs() << "We just constructed this LLVM module:\n\n";
+  llvm::outs() << *module.get() << "\n\n";
 
-  // Call the `foo' function with no arguments:
-  std::vector<GenericValue> noargs;
-  GenericValue gv = EE->runFunction(FooF, noargs);
+  {
+    llvm::ExecutionEngine* EE = llvm::EngineBuilder(std::move(module)).create();
+    llvm::GenericValue result = EE->runFunction(function, { /* noargs */ });
 
-  // Import result of execution:
-  outs() << "Result: " << gv.IntVal << "\n";
-  delete EE;
-  llvm_shutdown();
+    llvm::outs() << "Running foo returns: ";
+    llvm::outs() << result.IntVal << "\n";
+    delete EE;
+  }
+
+  llvm::llvm_shutdown();
+  llvm::outs().flush();
   return 0;
 }
