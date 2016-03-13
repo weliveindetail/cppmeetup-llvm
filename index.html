@@ -125,7 +125,7 @@
             <br>
             <b>Compiler</b><br>
             <ul>
-              <li>&rarr; it does code transformations</li>
+              <li>&rarr; code transformations to bridge abstraction gap between hardware and software</li>
               <li>&rarr; typically from high-level source code to<br> low-level machine code</li>
             </ul>
             <br>
@@ -133,6 +133,9 @@
             <ul>
               <li>&rarr; as close as possible to its actual execution</li>
             </ul>
+            <aside class="notes">
+              compiler: there are others like cross- &amp; source-to-source compilers (new fancy name transpilers)
+            </aside>
           </section>
           <section style="text-align: left;">
             <h3>What people mean with JIT Compiler?</h3>
@@ -162,8 +165,7 @@
           <section style="text-align: left;">
             <h3>What is LLVM?</h3>
             <ul>
-              <li>&rarr; compiler infrastructure</li>
-              <li>&rarr; set of reusable libraries written in C++</li>
+              <li>&rarr; compiler infrastructure:<br>intermediate representation and tools to manipulate it</li>
               <li>&rarr; started in 2003 by <a target="_blank" href="https://en.wikipedia.org/wiki/Chris_Lattner">Chris Lattner</a> (University of Illinois) as <i>Low Level Virtual Machine</i></li>
               <li>&rarr; today developed by the <a target="_blank" href="http://llvm.org/">LLVM Developer Group</a></li>
             </ul>
@@ -241,6 +243,25 @@
             </ul>
           </section>
           <section class="section-tl">
+            <img data-src="img/projects/souper-cse-logo.png" width="160" height="auto" alt="xxx" class="logo-tr" style="margin: 20px;">
+            <br><br><br><br>
+            <h3 style="margin: 0px;">Souper &mdash; an automatic optimizer</h3>
+            <a target="_blank" href="https://github.com/google/souper">
+                                     https://github.com/google/souper</a>
+            <ul>
+              <li>&rarr; theorem solver to identify peephole optimizations</li>
+              <li>&rarr; mostly eliminating dead code by tracking value ranges</li>
+              <li>&rarr; e.g. save 4 bytes in some bitwise operation &mdash; not much but happens around 21k times when compiling LLVM</li>
+              <li>&rarr; research targets systems that learn optimization automatically</li>
+            </ul>
+            <aside class="notes">
+              * compiler ouput is far from optimum
+              * not because devs are stupid, but code transformations have side effects (already with simple ones like inlining or const folding)
+              * much opportunity for tiny optimizations -> writing them manually makes it hard to get correctness
+              * uses an SMT solver (basically constraint satisfaction)
+            </aside>
+          </section>
+          <section class="section-tl">
             <img data-src="img/projects/emscripten_logo_full.png" width="408" height="111" alt="xxx" class="logo-tr">
             <br><br><br>
             <h3 style="margin: 0px;">Emscripten &mdash; a source-to-source compiler</h3>
@@ -250,8 +271,8 @@
             <ul>
               <li>&rarr; compiles C/C++ to asm.js</li>
               <li>&rarr; examples: Unreal Engine 3, SQLite, Lua VM</li>
-              <li>&rarr; claims to achieve "near-native" speed, but depends largely on use-case and client setup</li>
-              <li>&rarr; <b>note:</b> code size grows rapidly, which counteracts efficiency (i.e. in transfer, parsing and locality of reference)</li>
+              <li>&rarr; <i>"near-native"</i> speed, but very depending on use-case and client setup</li>
+              <li>&rarr; <b>note:</b> code size grows rapidly &mdash; less efficient transfer, parsing and locality of reference</li>
             </ul>
           </section>
           <section class="section-tl">
