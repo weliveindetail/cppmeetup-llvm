@@ -494,6 +494,166 @@ define i32 @main() {   ; i32()*
             </aside>
           </section>
         </section>
+          </section>
+        </section>
+
+        <!-- ------------------------------------------------------------------------------------------------------------------ -->
+
+        <section>
+          <section>
+            <h1 style="text-align: center;">JIT Basics</h1>
+          </section>
+          <section>
+            <h3 style="text-align: left;">The 20000ft overview</h3>
+            <img class="fragment current-visible replace" frament-index="0" data-src="img/jit/basics-01.svg" alt="xxx">
+            <img class="fragment current-visible replace" frament-index="1" data-src="img/jit/basics-02.svg" alt="xxx">
+            <img class="fragment current-visible replace" frament-index="2" data-src="img/jit/basics-03.svg" alt="xxx">
+            <img class="fragment current-visible replace" frament-index="3" data-src="img/jit/basics-04.svg" alt="xxx">
+            <img class="fragment current-visible replace" frament-index="4" data-src="img/jit/basics-05.svg" alt="xxx">
+            <img class="fragment current-visible replace" frament-index="5" data-src="img/jit/basics-06.svg" alt="xxx">
+            <img class="fragment current-visible replace" frament-index="6" data-src="img/jit/basics-07.svg" alt="xxx">
+            <img class="fragment current-visible replace" frament-index="7" data-src="img/jit/basics-08.svg" alt="xxx">
+            <img class="fragment current-visible replace" frament-index="8" data-src="img/jit/basics-09.svg" alt="xxx">
+            <br><br><br><br><br>
+            <br><br><br><br>
+            <aside class="notes">
+              * added: known be exec engine but not yet compiled
+              * loaded: compiled but not executable and not linked
+              * finalized: ready-to-go
+            </aside>
+          </section>
+          <section class="section-tl">
+            <h3>Engines</h3>
+            <ul>
+              <li>&rarr; <i>"legacy JIT"</i> very first JIT engine (removed with 3.6)</li>
+              <li>&rarr; MCJIT introduced with 3.4</li>
+              <li>&rarr; ORC introdcued with 3.7</li>
+            </ul>
+          </section>
+          <section class="section-tl">
+            <h3>MCJIT (Machine Code JIT)</h3>
+            <ul>
+              <li>&rarr; monolithic</li>
+              <li>&rarr; based on MC API's (CPU instruction-set tools)</li>
+              <li>&rarr; strict module-based compilation</li>
+              <li>&rarr; single RuntimeDyld for all linking jobs</li>
+              <li>&rarr; manual finialization: for relocations &amp; exec switches</li>
+            </ul>
+          </section>
+          <section class="section-tl">
+            <h3>ORC</h3>
+            <ul>
+              <li>&rarr; set of components: layers and utils</li>
+              <li>&rarr; uses MC layer &amp; handles module sets</li>
+              <li>&rarr; re-enables function-at-a-time "lazy" jitting</li>
+              <li>&rarr; one RTDyldMemoryManager per module</li>
+              <li>&rarr; on-demand finalization</li>
+            </ul>
+            <aside class="notes">
+              * module-sets allow optimizations e.g. direct calls between objects close in memory
+              * layers implement small common interface and sit one-on-top-of-another
+              * RTDyldMemoryManager lifetime is module-set-lifetime
+              * layers can have specific impls
+
+              * CompileOnDemandLayer: break up modules and redirects calls to not-yet-compiled functions back into the JIT
+              * LazyEmitLayer: defer adding modules to the layer below until a symbol in the module is actually requested
+              * IRCompilingLayer: compile bitcode to objects
+              * ObjectLinkingLayer: link sets of objects in memory using RuntimeDyld
+            </aside>
+          </section>
+          <section class="section-tl">
+            <h3>How can I inspect my IR?</h3>
+            <pre style="width: 99%;"><code class="cpp hljs" data-trim>
+llvm::Module* myModule = ...
+myModule->dump();
+
+llvm::Value* myValue = ...
+myValue->dump();
+            </code></pre>
+            &rarr; (almost) everything is as <a target="_blank" href="http://llvm.org/docs/doxygen/html/classllvm_1_1Value.html">Value</a>
+          </section>
+          <section class="section-tl">
+            <h3>How can I call external code?</h3>
+            <pre style="width: 99%;"><code class="cpp hljs" data-trim>
+// declare function
+Type* retTy = Type::getInt8PtrTy(Ctx);
+ArrayRef&lt;Type*&gt; argTys = { Type::getInt64Ty(Ctx) };
+FunctionType* mallocSig = FunctionType::get(retTy, argTys, false);
+
+Value* mallocFn = M->getOrInsertFunction("malloc", mallocSig);
+
+// compile call to allocate double
+Type* varTy = Type::getDoubleTy(Ctx);
+Constant* dataSize = ConstantExpr::getSizeOf(varTy);
+CallInst* mallocCall = CallInst::Create(mallocFn, dataSize, "void_ptr");
+Builder.GetInsertBlock()->getInstList().push_back(mallocCall);
+
+Value* voidPtr = mallocCall;
+Value* typedPtr = Builder.CreateBitCast(voidPtr, varTy->getPointerTo(), "double_ptr");
+            </code></pre>
+            <ul>
+              <li>
+                &rarr; plus a symbol resolver in <code>SimpleOrcJit</code>:<br>
+                <a style="font-size: 0.8em;" href="https://github.com/weliveindetail/JitFromScratch/blob/example/malloc/SimpleOrcJit.h#L27">
+                  http://.../JitFromScratch/blob/example/malloc/SimpleOrcJit.h#L27</a>
+              </li>
+            </ul>
+          </section>
+          <section class="section-tl">
+            <h3>How can I call my own code?</h3>
+            <pre style="width: 99%;"><code class="cpp hljs" data-trim>
+extern "C" void* myAlloc(long long bytes)
+{
+  return malloc(bytes);
+}
+...
+compiler->addGlobalMapping("myAlloc", (void*)myAlloc);
+...
+Value* mallocFn = M->getOrInsertFunction("myAlloc", mallocSig);
+...
+            </code></pre>
+            <ul>
+              <li>
+                &rarr; plus a new layer to resolve your symbol:<br>
+                <a style="font-size: 0.8em;" href="https://github.com/weliveindetail/JitFromScratch/blob/example/own-externals/SimpleOrcJit.h#L75">
+                  http://.../example/own-externals/SimpleOrcJit.h#L75</a>
+              </li>
+            </ul>
+          </section>
+          <section class="section-tl">
+            <h3>How can I define my own data types?</h3>
+            <pre style="width: 99%;"><code class="cpp hljs" data-trim>
+std::vector&lt;Type*&gt; memberTys = {
+  Type::getInt32Ty(Ctx),
+  Type::getDoubleTy(Ctx)
+};
+
+StructType* myStructTy = StructType::create(Ctx, memberTys, "myStructTy");
+            </code></pre>
+            <ul>
+              <li>
+                <a style="font-size: 0.8em;" href="https://github.com/weliveindetail/JitFromScratch/blob/example/struct-type/JitFromScratch.cpp#L48">
+                  https://.../example/struct-type/JitFromScratch.cpp#L48</a>
+              </li>
+            </ul>
+          </section>
+          <section class="section-tl">
+            <h3>How can I access fields?</h3>
+            <pre style="width: 99%;"><code class="cpp hljs" data-trim>
+// write init value to struct member
+Value* doublePtr = Builder.CreateStructGEP(myStructTy, typedPtr, 1, "member_ptr");
+Value* doubleInitVal = ConstantFP::get(Type::getDoubleTy(Ctx), 3.1415);
+
+Builder.CreateStore(doubleInitVal, doublePtr);
+            </code></pre>
+            <ul>
+              <li>
+                <a style="font-size: 0.8em;" href="https://github.com/weliveindetail/JitFromScratch/blob/example/getelementptr/JitFromScratch.cpp#L86">
+                  https://.../example/getelementptr/JitFromScratch.cpp#L86</a>
+              </li>
+            </ul>
+          </section>
+        </section>
 
         <!-- ------------------------------------------------------------------------------------------------------------------ -->
 
