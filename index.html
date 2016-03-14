@@ -592,7 +592,7 @@ define i32 @main() {   ; i32()*
             <h1 style="text-align: center;">Getting Started</h1>
           </section>
           <section class="section-tl">
-            <h3>Setup</h3>
+            <h3>Setup LLVM</h3>
             <ul>
               <li>
                 &rarr; Build from source with CMake:<br>
@@ -622,9 +622,39 @@ define i32 @main() {   ; i32()*
             </ul>
           </section>
           <section class="section-tl">
+            <h3>Command Line Tips</h3>
+            <code>clang++ `llvm-config --libs --system-libs`<br>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          -D__STDC_CONSTANT_MACROS<br>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          -D__STDC_LIMIT_MACROS<br>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          -lz -Wall -std=c++14<br>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          -o myExec mySource.cpp</code>
+          </section>
+          <section class="section-tl">
+            <h3>CMake Tips</h3>
+            <ul>
+              <li>&rarr; <code>find_package(LLVM)</code></li>
+              <li>&rarr; <code>llvm_map_components_to_libnames(LLVM_LIBS <br>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                  core orcjit x86asmparser x86codegen)</code></li>
+              <li>&rarr; some quirks for cross-platform details<br>
+                         <a style="font-size: 0.7em" target="_blank" 
+                            href="https://github.com/weliveindetail/StatefulJit/blob/master/CMakeLists.txt">
+                                  https://github.com/weliveindetail/StatefulJit/blob/master/CMakeLists.txt</a></li>
+            </ul>
+            <aside class="notes">
+              * StatefulJit:
+              ** on OSX/Xcode 7 and Win/VS 2015
+              ** with gtest
+            </aside>
+          </section>
+          <section class="section-tl">
             <h3>Checkout the tools</h3>
 
-            See what IR clang generates from C++
+            See the IR that clang generates from C++
             <ul>
               <li>
                 &rarr; browser: 
@@ -639,12 +669,12 @@ define i32 @main() {   ; i32()*
             Run your IR to see what it does:
             <ul>
               <li>
-                &rarr; browser: 
-                <a target="_blank" href="http://kripken.github.io/llvm.js/demo.html">
-                                         http://kripken.github.io/llvm.js/demo.html</a>
-              </li>
-              <li>
                 &rarr; bash: <code>$ lli foo.ll</code>
+              </li>
+              <li style="margin-left: -14px;">
+                ( &rarr; browser: 
+                <a target="_blank" href="http://kripken.github.io/llvm.js/demo.html">
+                                         http://kripken.github.io/llvm.js/demo.html</a> )
               </li>
             </ul>
           </section>
@@ -679,6 +709,15 @@ define i32 @main() {   ; i32()*
               <li>&rarr; requires some compiler and IR insight</li>
               <li>&rarr; useful for optimization or instrumentation</li>
               <li>&rarr; advanced</li>
+            </ul>
+          </section>
+          <section class="section-tl">
+            <h3>Keep in mind</h3>
+            <ul>
+              <li>&rarr; it's a great infrastructure, but it's still not trivial</li>
+              <li>&rarr; IR spec changes over time, e.g. llvm.js is still on 3.2 (2012)</li>
+              <li>&rarr; C++ has no standard ABI, take care when linking against other compiler's code</li>
+              <li>&rarr; turn off exceptions and RTTI</li>
             </ul>
           </section>
         </section>
@@ -724,12 +763,13 @@ static bool isLoopInvariant(const Value *V, const Loop *L) {
             </code></pre>
 
             <ul>
+              <li>&rarr; no implicit limitations</li>
               <li>&rarr; more efficient and flexible then built-in RTTI</li>
               <li>&rarr; fully explicit &mdash; use only where necessary</li>
-              <li>&rarr; no implicit limitations</li>
             </ul>
             <aside class="notes">
               * built-in RTTI limitation: dynamic_cast only works on classes that have a v-table
+              * default “99.9% of use cases” just implement classof
             </aside>
           </section>
           <section class="section-tl">
@@ -738,9 +778,9 @@ static bool isLoopInvariant(const Value *V, const Loop *L) {
                                      http://llvm.org/docs/ProgrammersManual.html#llvm-adt-ilist-h</a>
 
             <ul>
+              <li>&rarr; efficiently stores polymorphic objects</li>
               <li>&rarr; used for Instructions, BasicBlocks, etc.</li>
               <li>&rarr; minimum-overhead (never touch the heap)</li>
-              <li>&rarr; efficiently stores polymorphic objects</li>
               <li>&rarr; no invalidation on modification &amp; constant-time splice</li>
               <li>&rarr; STL-compliant &amp; recently <a target="_blank" href="https://groups.google.com/forum/#!topic/llvm-dev/wGBO6J-ttZQ">cleaned up</a></li>
             </ul>
