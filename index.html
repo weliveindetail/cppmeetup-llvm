@@ -141,22 +141,18 @@
             </aside>
           </section>
           <section style="text-align: left;">
-            <h3>What people mean with JIT Compiler?</h3>
-            <br>
+            <h3 style="margin-top: 20px;">What people mean with JIT Compiler?</h3>
             <blockquote cite="http://eli.thegreenplace.net/2013/11/05/how-to-jit-an-introduction">
               Whenever a program, while running, creates and runs some new executable code 
               which was not part of the program when it was stored on disk, it’s a JIT.
               <cite>Eli Bendersky</cite>
             </blockquote>
             <br>
-            &rarr; widely used as a synonym for <b style="color: #c33;">Runtime Compiler</b>
-            <br>
-            &rarr; AOT means <b style="color: #c33;">Static Compiler</b>
-          </section>
-          <section style="text-align: left;">
-            <h3>Difference Static vs. Runtime Compiler?</h3>
-            <br>
-            todo
+            Widely used as synonyms:
+            <ul style="text-align: center;">
+              <li>JIT = Just-in-Time = <b style="color: #c33;">Runtime Compiler</b></li>
+              <li>AOT = Ahead-of-Time = <b style="color: #c33;">Static Compiler</b></li>
+            </ul>
           </section>
         </section>
 
@@ -221,7 +217,7 @@
             <!--<p class="fragment" data-fragment-index="4" style="font-size: 200px; text-align: left; margin-top: -150px; padding-left: 165px; color: #d22;">&uarr;</p>-->
           </section>
           <section>
-            <h3>Phases of compilation</h3>
+            <h3>Compilation step by step</h3>
             <img class="fragment current-visible fade-in replace" frament-index="0" data-src="img/cc/src-to-asm-0.svg" alt="xxx">
             <img class="fragment current-visible fade-in replace" frament-index="1" data-src="img/cc/src-to-asm-1.svg" alt="xxx">
             <img class="fragment current-visible fade-in replace" frament-index="2" data-src="img/cc/src-to-asm-2.svg" alt="xxx">
@@ -236,17 +232,24 @@
           <section>
             <h3>Three-Phase-Design</h3>
             <div style="width: 50%; height: 300px; margin: 0px 25%; text-align: center;">
-              <img class="fragment current-visible fade-in replace" frament-index="0" data-src="img/arch/three-phase.svg" alt="xxx">
-              <img class="fragment current-visible fade-in replace" frament-index="1" data-src="img/arch/three-phase-ir.svg" alt="xxx">
+              <img class="fragment current-visible fade-in replace" frament-index="0" data-src="img/cc/three-phase.svg" alt="xxx">
+              <img class="fragment current-visible fade-in replace" frament-index="1" data-src="img/cc/three-phase-ir.svg" alt="xxx">
             </div>
-            <p class="fragment" frament-index="2">
-            </p>
             <aside class="notes">
               * boarder set of programmers: better test coverage &amp; more potential contributers
               * different skills for implementing a front-end/optimizer/back-end
-              * GCC not reusable as library, because it's designed as a monolithic application (no strict separation of frontend/optimizer/backend)
-              * JVM and .Net are opaque virtual machines (optimizer - backend not modular)
+              * GCC: monolithic application, no strict separation - not reusable as library
+              * JVM and .Net are opaque virtual machines - optimizer/backend not
             </aside>
+          </section>
+          <section style="text-align: left;">
+            <h3>Challenges for a Runtime Compiler?</h3>
+            <ul>
+              <li>&rarr; compile to machine code directly</li>
+              <li>&rarr; provide memory for executable code</li>
+              <li>&rarr; link in new code at runtime</li>
+              <li>&rarr; manage dynamic allocations and lifetime</li>
+            </ul>
           </section>
         </section>
 
@@ -350,7 +353,7 @@ define i32 @main() {   ; i32()*
           <section class="section-tl">
             <h3>Engines</h3>
             <ul>
-              <li>&rarr; <i>"legacy JIT"</i> very first JIT engine (removed with 3.6)</li>
+              <li>&rarr; <i>"legacy JIT"</i> removed with 3.6</li>
               <li>&rarr; MCJIT introduced with 3.4</li>
               <li>&rarr; ORC introdcued with 3.7</li>
             </ul>
