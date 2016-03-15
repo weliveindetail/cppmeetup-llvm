@@ -178,7 +178,9 @@
               <li>&rarr; great development tools</li>
             </ul>
             <br>
-            &hellip; and a good craftsman should know his tools!
+            <p class="fragment" frament-index="1">
+              &hellip; and a good craftsman should know his tools!
+            </p>
           </section>
         </section>
 
@@ -214,7 +216,6 @@
             <img class="fragment current-visible replace" frament-index="2" data-src="img/cc/src-to-exec-2.svg" alt="xxx">
             <img class="fragment current-visible replace" frament-index="3" data-src="img/cc/src-to-exec-3.svg" alt="xxx">
             <br><br><br><br>
-            <!--<p class="fragment" data-fragment-index="4" style="font-size: 200px; text-align: left; margin-top: -150px; padding-left: 165px; color: #d22;">&uarr;</p>-->
           </section>
           <section>
             <h3>Compilation step by step</h3>
@@ -225,7 +226,6 @@
             <img class="fragment current-visible fade-in replace" frament-index="4" data-src="img/cc/src-to-asm-phases.svg" alt="xxx" style="margin-top: -7px;">
             <br><br><br><br>
             <aside class="notes">
-              AST: redundancy
               IR: Static Single Assignment / 3-Adress-Code
             </aside>
           </section>
@@ -236,10 +236,10 @@
               <img class="fragment current-visible fade-in replace" frament-index="1" data-src="img/cc/three-phase-ir.svg" alt="xxx">
             </div>
             <aside class="notes">
-              * boarder set of programmers: better test coverage &amp; more potential contributers
-              * different skills for implementing a front-end/optimizer/back-end
-              * GCC: monolithic application, no strict separation - not reusable as library
-              * JVM and .Net are opaque virtual machines - optimizer/backend not
+              * boarder set of programmers: test coverage &amp; potential contributers<br>
+              * different skills for implementing a front/opt/back<br>
+              * GCC: monolithic, no strict separation, not reusable as library
+              * JVM and .Net are opaque virtual machines, optimizer/backend not
             </aside>
           </section>
           <section style="text-align: left;">
@@ -250,78 +250,6 @@
               <li>&rarr; link in new code at runtime</li>
               <li>&rarr; manage dynamic allocations and lifetime</li>
             </ul>
-          </section>
-        </section>
-
-        <!-- ------------------------------------------------------------------------------------------------------------------ -->
-
-        <section>
-          <section>
-            <h1>LLVM IR</h1>
-          </section>
-          <section class="section-tl">
-            <h3>Example</h3>
-            <pre style="font-size: 0.5em;"><code class="x86asm hljs" style="max-height: 100%;" data-trim>
-; Declare the string constant as a global constant.
-@.str = private unnamed_addr constant [13 x i8] c"hello world\0A\00"
-
-; External declaration of the puts function
-declare i32 @puts(i8* nocapture) nounwind
-
-; Definition of main function
-define i32 @main() {   ; i32()*
-  ; Convert [13 x i8]* to i8  *...
-  %cast210 = getelementptr [13 x i8], [13 x i8]* @.str, i64 0, i64 0
-
-  ; Call puts function to write out the string to stdout.
-  call i32 @puts(i8* %cast210)
-  ret i32 0
-}
-
-; Named metadata
-!0 = !{i32 42, null, !"string"}
-!foo = !{!0}
-            </code></pre>
-          </section>
-          <section class="section-tl">
-            <h3>Properties</h3>
-            <ul>
-              <li>&rarr; Static Single Assignment (SSA)</li>
-              <li>&rarr; type safety, low-level operations, flexibility</li>
-              <li>&rarr; source language neutral</li>
-              <li>&rarr; not platform specific</li>
-              <li>&rarr; <a target="_blank" href="http://llvm.org/docs/LangRef.html">http://llvm.org/docs/LangRef.html</a></li>
-            </ul>
-            <aside class="notes">
-              * can hold meta data, e.g. debug info! unlike GCC's GIMPLE --> accesses front-end AST
-            </aside>
-          </section>
-          <section class="section-tl">
-            <h3>Representations</h3>
-            <ul>
-              <li>&rarr; in-memory compiler IR</li>
-              <li>&rarr; on-disk bitcode representation</li>
-              <li>&rarr; human readable text form</li>
-            </ul>
-            <aside class="notes">
-              Optimization for:
-              * fast access/processing
-              * fast serialization/deserialization
-              * readablility
-            </aside>
-          </section>
-          <section class="section-tl">
-            <h3>Restrictions</h3>
-            <ul>
-              <li>&rarr; designed for compiler optimizations</li>
-              <li>&rarr; neither fully portable nor fully stable</li>
-            </ul>
-            <aside class="notes">
-              * not necessarily identical on different platforms
-              * Google (Portable) Native Client ---> issues
-            </aside>
-          </section>
-        </section>
           </section>
         </section>
 
@@ -388,6 +316,88 @@ define i32 @main() {   ; i32()*
               * IRCompilingLayer: compile bitcode to objects
               * ObjectLinkingLayer: link sets of objects in memory using RuntimeDyld
             </aside>
+          </section>
+        </section>
+
+        <!-- ------------------------------------------------------------------------------------------------------------------ -->
+
+        <section>
+          <section>
+            <h1>LLVM IR</h1>
+          </section>
+          <section class="section-tl">
+            <h3>Example</h3>
+            <pre style="font-size: 0.5em;"><code class="x86asm hljs" style="max-height: 100%;" data-trim>
+; Declare the string constant as a global constant.
+@.str = private unnamed_addr constant [13 x i8] c"hello world\0A\00"
+
+; External declaration of the puts function
+declare i32 @puts(i8* nocapture) nounwind
+
+; Definition of main function
+define i32 @main() {   ; i32()*
+  ; Convert [13 x i8]* to i8  *...
+  %cast210 = getelementptr [13 x i8], [13 x i8]* @.str, i64 0, i64 0
+
+  ; Call puts function to write out the string to stdout.
+  call i32 @puts(i8* %cast210)
+  ret i32 0
+}
+
+; Named metadata
+!0 = !{i32 42, null, !"string"}
+!foo = !{!0}
+            </code></pre>
+          </section>
+          <section class="section-tl">
+            <h3>Properties</h3>
+            <ul>
+              <li>&rarr; Static Single Assignment (SSA)</li>
+              <li>&rarr; type safety, low-level operations, flexibility</li>
+              <li>&rarr; source language neutral</li>
+              <li>&rarr; not platform specific</li>
+              <li>&rarr; <a target="_blank" href="http://llvm.org/docs/LangRef.html">http://llvm.org/docs/LangRef.html</a></li>
+            </ul>
+            <aside class="notes">
+              * can hold meta data, e.g. debug info! unlike GCC's GIMPLE --> accesses front-end AST
+            </aside>
+          </section>
+          <section class="section-tl">
+            <h3>Representations</h3>
+            <ul>
+              <li>&rarr; in-memory compiler IR</li>
+              <li>&rarr; on-disk bitcode representation</li>
+              <li>&rarr; human readable text form</li>
+            </ul>
+            <aside class="notes">
+              Optimization for:<br>
+              * fast access/processing<br>
+              * fast serialization/deserialization<br>
+              * readablility
+            </aside>
+          </section>
+          <section class="section-tl">
+            <h3>Restrictions</h3>
+            <ul>
+              <li>&rarr; designed for compiler optimizations</li>
+              <li>&rarr; neither fully portable nor fully stable</li>
+            </ul>
+            <aside class="notes">
+              * not necessarily identical on different platforms<br>
+              * Google (Portable) Native Client ---> issues<br>
+            </aside>
+          </section>
+        </section>
+
+        <!-- ------------------------------------------------------------------------------------------------------------------ -->
+
+        <section>
+          <section>
+            <h1 style="text-align: center;">How can I &hellip;?</h1>
+          </section>
+          <section class="section-tl">
+            <h3>How can I generate IR?</h3>
+            &rarr; let's get to the code!
           </section>
           <section class="section-tl">
             <h3>How can I inspect my IR?</h3>
