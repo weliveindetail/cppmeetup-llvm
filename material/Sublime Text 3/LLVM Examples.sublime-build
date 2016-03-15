@@ -1,12 +1,26 @@
-// Build System for Sublime Text 3 to compile C using Clang.
+// Build System for Sublime Text 3 to compile LLVM examples.
 //
-// Usage:
-//   Compile and run via CTRL-b or F7
-//   Compile with CTRL-SHIFT-b
-//
-// Pre-requisities:
-//   - A Unix-like OS (for bash)
-//   - clang must be available on your PATH
+// Note: usually a stable version of clang is usually installed already, 
+// so brew installs llvm and clang to /usr/local/opt/llvm. This build 
+// configuration "LLVM Examples.sublime-build" assumes exactly this.
+// 
+// Follow these steps for installation:
+// 
+// Install Sublime Text 3 via brew & cask:
+//   $ brew install caskroom/cask/brew-cask
+//   $ brew tap caskroom/versions
+//   $ brew cask install sublime-text3
+// 
+// Install the latest LLVM libraries, Clang and AddressSanitizer:
+//   $ brew install llvm --with-clang --with-asan --with-libcxx --HEAD
+// 
+// Move this file to:
+//   /Users/<user>/Library/Application Support/Sublime Text 3/Packages/User
+// 
+// Run Sublime Text 3
+// Load JitFromScratch.cpp
+// From the toolbar select Tools > Build System > LLVM Examples
+// Build and run with Cmd+B
 //
 
 {

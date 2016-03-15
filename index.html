@@ -328,6 +328,9 @@
           <section class="section-tl">
             <h3>Example</h3>
             <pre style="font-size: 0.5em;"><code class="x86asm hljs" style="max-height: 100%;" data-trim>
+; ModuleID = 'test'
+target datalayout = "e-m:o-i64:64-f80:128-n8:16:32:64-S128"
+
 ; Declare the string constant as a global constant.
 @.str = private unnamed_addr constant [13 x i8] c"hello world\0A\00"
 
@@ -336,6 +339,7 @@ declare i32 @puts(i8* nocapture) nounwind
 
 ; Definition of main function
 define i32 @main() {   ; i32()*
+entry:
   ; Convert [13 x i8]* to i8  *...
   %cast210 = getelementptr [13 x i8], [13 x i8]* @.str, i64 0, i64 0
 
@@ -348,6 +352,12 @@ define i32 @main() {   ; i32()*
 !0 = !{i32 42, null, !"string"}
 !foo = !{!0}
             </code></pre>
+            <aside class="notes">
+              * SSA and basic blocks
+              * modules
+              * abstract types
+              * meta data (e.g. debug info! unlike GCC's GIMPLE)
+            </aside>
           </section>
           <section class="section-tl">
             <h3>Properties</h3>
@@ -358,9 +368,6 @@ define i32 @main() {   ; i32()*
               <li>&rarr; not platform specific</li>
               <li>&rarr; <a target="_blank" href="http://llvm.org/docs/LangRef.html">http://llvm.org/docs/LangRef.html</a></li>
             </ul>
-            <aside class="notes">
-              * can hold meta data, e.g. debug info! unlike GCC's GIMPLE --> accesses front-end AST
-            </aside>
           </section>
           <section class="section-tl">
             <h3>Representations</h3>
@@ -490,94 +497,6 @@ Builder.CreateStore(doubleInitVal, doublePtr);
                   https://.../example/getelementptr/JitFromScratch.cpp#L86</a>
               </li>
             </ul>
-          </section>
-        </section>
-
-        <!-- ------------------------------------------------------------------------------------------------------------------ -->
-
-        <section>
-          <section>
-            <h1 style="text-align: center;">Conceptual Advantages</h1>
-          </section>
-          <section class="section-tl">
-            <h3>Reusability is the key</h3>
-            <ul>
-              <li>&rarr; extremely reuse-friendly / hackable<br>due to modular design and permissive license</li>
-              <li>&rarr; static compilers and runtime compilers in one framework</li>
-              <li>&rarr; large active community:<br>
-                  <a target="_blank" href="http://lists.llvm.org/pipermail/llvm-dev/">http://lists.llvm.org/pipermail/llvm-dev/</a><br>
-                  <a target="_blank" href="http://lists.llvm.org/pipermail/cfe-dev/">http://lists.llvm.org/pipermail/cfe-dev/</a></li>
-            </ul>
-            <aside class="notes">
-            </aside>
-          </section>
-          <section class="section-tl">
-            <h3>Modular Optimizer</h3>
-            <ul>
-              <li>&rarr; IR is the only interface</li>
-              <li>&rarr; pipeline of distinct optimization passes</li>
-              <li>&rarr; pass manager for dependency resolution and scheduling</li>
-              <li>&rarr; <a target="_blank" href="http://llvm.org/docs/WritingAnLLVMPass.html">
-                                                  http://llvm.org/docs/WritingAnLLVMPass.html</a></li>
-            </ul>
-          </section>
-          <section class="section-tl">
-            <h3>Link-Time Optimization</h3>
-            <img data-src="img/aosa/LTO.png" alt="xxx" width="100%" height="auto" style="border: 0px;">
-            <ul>
-              <li>&rarr; no expensive serialization (naturally)</li>
-              <li>&rarr; across different source languages</li>
-            </ul>
-          </section>
-          <section class="section-tl">
-            <h3>Install-Time Optimization</h3>
-            <img data-src="img/aosa/ITO.png" alt="xxx" width="100%" height="auto" style="border: 0px;">
-            <ul>
-              <li>&rarr; delay codegen to installation (still AOT)</li>
-              <li>&rarr; instruction selection &amp; scheduling for specific machine</li>
-            </ul>
-          </section>
-          <section class="section-tl">
-            <h3>Unit Testing the Optimizer</h3>
-
-            With textual IR &amp; modular optimizer:
-            <ul>
-              <li>&rarr; unit tests for single optimization passes!</li>
-              <li>&rarr; e.g. make sure constant folding actually performed</li>
-              <li>&rarr; typical problem with source code files as input: front-ends do constant folding too!</li>
-            </ul>
-            <aside class="notes">
-              Traditional approaches:
-              * run .c file through compiler to test that it doesn't crash (GCC)
-              * compile huge programs with nightly builds and run automated user-interactions (MSVC)
-            </aside>
-          </section>
-          <section class="section-tl">
-            <h3>Why LLVM? Why now?</h3>
-            <ul>
-              <li>&rarr; people build compilers since 1952</li>
-              <li>&rarr; from the scientific point of view there is nothing new</li>
-            </ul>
-            <aside class="notes">
-              * first compiler by Grace Hopper
-              * first FORTRAN compiler released in 1957 - took 18 person-years
-              * similar IR's in JVM and .Net
-              * Three-Phase-Design is well understood and implemented in other experimental compilers like SUIF, but more specific research and not production ready
-            </aside>
-          </section>
-          <section class="section-tl">
-            <h3>In the right spot at the right time!</h3>
-            <ul>
-              <li>&rarr; native programming is back!</li>
-              <li>&rarr; many new architectures for mobile processors and GPUs</li>
-              <li>&rarr; instead of getting clocked faster, instruction sets are getting weirder</li>
-              <li>&rarr; high demand for compiler-based build tools</li>
-            </ul>
-            <aside class="notes">
-              * interest and investing in C++ and compilers grows again since 2010
-              * existing C++ compilers lack extensibility, while new standards arise
-              * weirder: instruction-level parallelism with VeryLongInstructionWords, Vectorization, massively parallel GPUs
-            </aside>
           </section>
         </section>
 
@@ -715,6 +634,94 @@ Builder.CreateStore(doubleInitVal, doublePtr);
               <li>&rarr; C++ has no standard ABI, take care when linking against other compiler's code</li>
               <li>&rarr; turn off exceptions and RTTI</li>
             </ul>
+          </section>
+        </section>
+
+        <!-- ------------------------------------------------------------------------------------------------------------------ -->
+
+        <section>
+          <section>
+            <h1 style="text-align: center;">Conceptual Advantages</h1>
+          </section>
+          <section class="section-tl">
+            <h3>Reusability is the key</h3>
+            <ul>
+              <li>&rarr; extremely reuse-friendly / hackable<br>due to modular design and permissive license</li>
+              <li>&rarr; static compilers and runtime compilers in one framework</li>
+              <li>&rarr; large active community:<br>
+                  <a target="_blank" href="http://lists.llvm.org/pipermail/llvm-dev/">http://lists.llvm.org/pipermail/llvm-dev/</a><br>
+                  <a target="_blank" href="http://lists.llvm.org/pipermail/cfe-dev/">http://lists.llvm.org/pipermail/cfe-dev/</a></li>
+            </ul>
+            <aside class="notes">
+            </aside>
+          </section>
+          <section class="section-tl">
+            <h3>Modular Optimizer</h3>
+            <ul>
+              <li>&rarr; IR is the only interface</li>
+              <li>&rarr; pipeline of distinct optimization passes</li>
+              <li>&rarr; pass manager for dependency resolution and scheduling</li>
+              <li>&rarr; <a target="_blank" href="http://www.aosabook.org/en/llvm.html">
+                                                  http://www.aosabook.org/en/llvm.html</a></li>
+            </ul>
+          </section>
+          <section class="section-tl">
+            <h3>Link-Time Optimization</h3>
+            <img data-src="img/aosa/LTO.png" alt="xxx" width="100%" height="auto" style="border: 0px;">
+            <ul>
+              <li>&rarr; no expensive serialization (naturally)</li>
+              <li>&rarr; across different source languages</li>
+            </ul>
+          </section>
+          <section class="section-tl">
+            <h3>Install-Time Optimization</h3>
+            <img data-src="img/aosa/ITO.png" alt="xxx" width="100%" height="auto" style="border: 0px;">
+            <ul>
+              <li>&rarr; delay codegen to installation (still AOT)</li>
+              <li>&rarr; instruction selection &amp; scheduling for specific machine</li>
+            </ul>
+          </section>
+          <section class="section-tl">
+            <h3>Unit Testing the Optimizer</h3>
+
+            With textual IR &amp; modular optimizer:
+            <ul>
+              <li>&rarr; unit tests for single optimization passes!</li>
+              <li>&rarr; e.g. make sure constant folding actually performed</li>
+              <li>&rarr; typical problem with source code files as input: front-ends do constant folding too!</li>
+            </ul>
+            <aside class="notes">
+              Traditional approaches:
+              * run .c file through compiler to test that it doesn't crash (GCC)
+              * compile huge programs with nightly builds and run automated user-interactions (MSVC)
+            </aside>
+          </section>
+          <section class="section-tl">
+            <h3>Why LLVM? Why now?</h3>
+            <ul>
+              <li>&rarr; people build compilers since 1952</li>
+              <li>&rarr; from the scientific point of view there is nothing new</li>
+            </ul>
+            <aside class="notes">
+              * first compiler by Grace Hopper
+              * first FORTRAN compiler released in 1957 - took 18 person-years
+              * similar IR's in JVM and .Net
+              * Three-Phase-Design is well understood and implemented in other experimental compilers like SUIF, but more specific research and not production ready
+            </aside>
+          </section>
+          <section class="section-tl">
+            <h3>In the right spot at the right time!</h3>
+            <ul>
+              <li>&rarr; native programming is back!</li>
+              <li>&rarr; many new architectures for mobile processors and GPUs</li>
+              <li>&rarr; instead of getting clocked faster, instruction sets are getting weirder</li>
+              <li>&rarr; high demand for compiler-based build tools</li>
+            </ul>
+            <aside class="notes">
+              * interest and investing in C++ and compilers grows again since 2010
+              * existing C++ compilers lack extensibility, while new standards arise
+              * weirder: instruction-level parallelism with VeryLongInstructionWords, Vectorization, massively parallel GPUs
+            </aside>
           </section>
         </section>
 
@@ -973,6 +980,28 @@ static bool isLoopInvariant(const Value *V, const Loop *L) {
                 and so on...
               </li>
             </ul>
+          </section>
+        </section>
+
+        <!-- ------------------------------------------------------------------------------------------------------------------ -->
+
+        <section>
+          <section>
+            <h1 style="text-align: center;">Thanks!</h1>
+          </section>
+        </section>
+
+        <!-- ------------------------------------------------------------------------------------------------------------------ -->
+
+        <section>
+          <section>
+            <br><br><br>
+            <h1 style="text-align: center;">Questions?</h1>
+            <br>
+            <a target="_blank" href="https://github.com/weliveindetail/JitFromScratch">
+                                     https://github.com/weliveindetail/JitFromScratch</a>
+            <a target="_blank" href="https://github.com/weliveindetail/StatefulJit">
+                                     https://github.com/weliveindetail/StatefulJit</a>
           </section>
         </section>
 
