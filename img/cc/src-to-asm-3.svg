@@ -74,8 +74,8 @@
       <text x="199.769" xml:space="preserve" y="490.7014" clip-path="url(#clipPath2)" stroke="none">&lt;var, y&gt;</text>
       <text x="303.1341" xml:space="preserve" y="393.9502" clip-path="url(#clipPath2)" stroke="none">basic blocks with SSA code</text>
       <rect x="297.1341" y="375.8858" clip-path="url(#clipPath2)" fill="none" width="338.3667" rx="4" ry="4" height="164.4" stroke="gray"/>
-      <text x="347.4085" xml:space="preserve" y="458.4842" clip-path="url(#clipPath2)" stroke="none">x ← 5</text>
-      <text x="347.4085" xml:space="preserve" y="473.1854" clip-path="url(#clipPath2)" stroke="none">x ← x - 3</text>
+      <text x="347.4085" xml:space="preserve" y="458.4842" clip-path="url(#clipPath2)" stroke="none">v ← 5</text>
+      <text x="347.4085" xml:space="preserve" y="473.1854" clip-path="url(#clipPath2)" stroke="none">x ← v - 3</text>
       <text x="347.4085" xml:space="preserve" y="487.8865" clip-path="url(#clipPath2)" stroke="none">x &lt; 3?</text>
       <path fill="none" d="M327.7578 468.4715 L336.4018 443.6355 L405.5538 443.6355 L414.1978 468.4715 L405.5538 493.3075 L336.4018 493.3075 Z" clip-path="url(#clipPath2)" fill-rule="evenodd"/>
       <text x="442.2716" xml:space="preserve" y="427.0808" clip-path="url(#clipPath2)" stroke="none">y ← x * 2</text>
