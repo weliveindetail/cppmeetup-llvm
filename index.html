@@ -31,9 +31,32 @@
         opacity: 1.0;
         float: right; }
 
+      .reveal .slides section.section-mc {
+        text-align: center;
+        vertical-align: middle; }
+
       .reveal .slides section.section-tl {
         text-align: left;
         vertical-align: top; }
+
+      .reveal .slides section.section-tl h3 {
+        margin-top: 20px;
+      }
+
+      .reveal .slides section.section-tl-nest {
+        text-align: left;
+        vertical-align: top; }
+
+      .reveal .slides section.section-tl-nest h3 {
+        margin-top: 40px;
+      }
+
+      .reveal .slides table th, 
+      .reveal .slides table td {
+          text-align: left;
+          padding: 0.3em 0.6em;
+          border-bottom: 1px solid;
+      }
 
       .reveal .slides section img.abspos {
         position: absolute;
@@ -91,8 +114,8 @@
 					<small style="width: 72%; padding: 10px 0px;">
             <table style="width: 100%;">
               <tr><td style="text-align: right;">
-                Stefan Gränitz @ C++ Meetup, Berlin<br>
-                Tuesday, March 15th 2016<br>
+                Stefan Gränitz @ LLVM Social Berlin<br>
+                Thursday, September 29th 2016<br>
                 <br>
                 <br>
               </td></tr>
@@ -118,149 +141,154 @@
 
         <!-- ------------------------------------------------------------------------------------------------------------------ -->
 
-        <section>
-          <section>
-            <h3 style="text-align: left;">What is a...</h3>
-            <h1 style="text-align: center;">JIT Compiler?</h1>
-          </section>
-          <section style="text-align: left;">
-            <h3>What is a JIT Compiler?</h3>
-            <br>
-            <b>Compiler</b><br>
-            <ul>
-              <li>&rarr; code transformations to bridge abstraction gap between hardware and software</li>
-              <li>&rarr; typically from high-level source code to<br> low-level machine code</li>
-            </ul>
-            <br>
-            <b>Just-In-Time</b><br>
-            <ul>
-              <li>&rarr; as close as possible to its actual execution</li>
-            </ul>
-            <aside class="notes">
-              compiler: there are others like cross- &amp; source-to-source compilers (new fancy name transpilers)
-            </aside>
-          </section>
-          <section style="text-align: left;">
-            <h3 style="margin-top: 20px;">What people mean with JIT Compiler?</h3>
-            <blockquote cite="http://eli.thegreenplace.net/2013/11/05/how-to-jit-an-introduction">
-              Whenever a program, while running, creates and runs some new executable code 
-              which was not part of the program when it was stored on disk, it’s a JIT.
-              <cite>Eli Bendersky</cite>
-            </blockquote>
-            <br>
-            Widely used as synonyms:
-            <ul style="text-align: center;">
-              <li>JIT = Just-in-Time = <b style="color: #c33;">Runtime Compiler</b></li>
-              <li>AOT = Ahead-of-Time = <b style="color: #c33;">Static Compiler</b></li>
-            </ul>
-          </section>
+        <section class="section-tl">
+          <h3>Terminology</h3>
+          <blockquote cite="http://eli.thegreenplace.net/2013/11/05/how-to-jit-an-introduction">
+            Whenever a program, while running, creates and runs some new executable code 
+            which was not part of the program when it was stored on disk, it’s a JIT.
+            <cite>Eli Bendersky</cite>
+          </blockquote>
+          <br>
+          Widely used as synonyms:
+          <ul style="text-align: center;">
+            <li>JIT = Just-in-Time = <b style="color: #c33;">Runtime Compiler</b></li>
+            <li>AOT = Ahead-of-Time = <b style="color: #c33;">Static Compiler</b></li>
+          </ul>
         </section>
 
-        <section>
-          <section>
-            <h3 style="text-align: left;">What is...</h3>
-            <h1 style="text-align: center;">LLVM?</h1>
-          </section>
-          <section style="text-align: left;">
-            <h3>What is LLVM?</h3>
-            <ul>
-              <li>&rarr; compiler infrastructure:<br>intermediate representation and tools to manipulate it</li>
-              <li>&rarr; started in 2003 by <a target="_blank" href="https://en.wikipedia.org/wiki/Chris_Lattner">Chris Lattner</a> (University of Illinois) as <i>Low Level Virtual Machine</i></li>
-              <li>&rarr; today developed by the <a target="_blank" href="http://llvm.org/">LLVM Developer Group</a></li>
-            </ul>
-          </section>
-          <section style="text-align: left;">
-            <h3>Why is that interesting for C++ devs?</h3>
-            <ul>
-              <li>&rarr; huge code base:<br>open-source, modern C++</li>
-              <li>&rarr; sophisticated requirements:<br>modularity, portability, efficiency</li>
-              <li>&rarr; components that you might like to use</li>
-              <li>&rarr; great development tools</li>
-            </ul>
-            <br>
-            <p class="fragment" frament-index="1">
-              &hellip; and a good craftsman should know his tools!
+        <!-- ------------------------------------------------------------------------------------------------------------------ -->
+
+        <section class="section-tl-nest">
+          <h3>What's the difference? (technically)</h3>
+          <section class="section-mc">
+            <p>
+              <b>Static Compilation</b><br>
+              Compile &rarr; Link &rarr; Load &rarr; Run<br>
+              <br>
+              <b>Runtime Compilation</b><br>
+              Compile &rarr; Load &rarr; Link &rarr; Run
             </p>
           </section>
-        </section>
-
-        <!-- ------------------------------------------------------------------------------------------------------------------ -->
-
-        <section>
-          <section>
-            <br><br><br>
-            <h3 style="text-align: left;">Slight detour to...</h3>
-            <h1 style="text-align: center;">Compiler<br>Construction</h1>
-
-            <img class="fragment fade-in abspos" style="left: 3%; top: 60%;" frament-index="0" data-src="img/cc/books/0.jpg" alt="xxx">
-            <img class="fragment fade-in abspos" style="left: 55%; top: 55%;" frament-index="1" data-src="img/cc/books/1.jpg" alt="xxx">
-            <img class="fragment fade-in abspos" style="left: 30%; top: 45%;" frament-index="2" data-src="img/cc/books/2.jpg" alt="xxx">
-            <img class="fragment fade-in abspos" style="left: 80%; top: 20%;" frament-index="3" data-src="img/cc/books/3.jpg" alt="xxx">
-
-            <aside class="notes">
-              Well-understood in computer science
-            </aside>
-          </section>
-          <section>
-            <h3>What is the goal?</h3>
-            <div class="fragment" data-fragment-index="1">
-              <img data-src="img/cc/helloworld_cpp.png" width="300" height="auto" alt="xxx" style="border: 0px; vertical-align: middle;">
-              <span style="font-size: 200px; vertical-align: middle; margin: 50px;">&rarr;</span>
-              <img data-src="img/cc/helloworld_asm.jpg" width="200" height="auto" alt="xxx" style="border: 0px; vertical-align: middle;">
+          <section class="section-tl">
+            <div style="margin-top: 80px; font-size: 0.9em;">
+              <table>
+                <tr>
+                  <th></th>
+                  <th><b>Runtime Compiler</b></th>
+                  <th><b>Static Compiler</b></th>
+                </tr>
+                <tr>
+                  <td><b>Compile</b></td>
+                  <td>emit machine code</td>
+                  <td>emit assembly</td>
+                </tr>
+                <tr>
+                  <td><b>Link</b></td>
+                  <td>resolve symbols &amp; relocations</td>
+                  <td>use system tools for<br>static &amp; dynamic linking</td>
+                </tr>
+                <tr>
+                  <td><b>Load</b></td>
+                  <td>provide &amp; manage memory</td>
+                  <td>use system loader (implicitly)</td>
+                </tr>
+                <tr>
+                  <td><b>Run</b></td>
+                  <td>lifetime management<br> for heap allocations</td>
+                  <td>nothing to do as long as<br>DLLs aren't unlinked</td>
+                </tr>
+              </table>
             </div>
-          </section>
-          <section>
-            <h3>Native code generation step by step</h3>
-            <img class="fragment current-visible replace" frament-index="0" data-src="img/cc/src-to-exec-0.svg" alt="xxx">
-            <img class="fragment current-visible replace" frament-index="1" data-src="img/cc/src-to-exec-1.svg" alt="xxx">
-            <img class="fragment current-visible replace" frament-index="2" data-src="img/cc/src-to-exec-2.svg" alt="xxx">
-            <img class="fragment current-visible replace" frament-index="3" data-src="img/cc/src-to-exec-3.svg" alt="xxx">
-            <br><br><br><br>
-          </section>
-          <section>
-            <h3>Compilation step by step</h3>
-            <img class="fragment current-visible fade-in replace" frament-index="0" data-src="img/cc/src-to-asm-0.svg" alt="xxx">
-            <img class="fragment current-visible fade-in replace" frament-index="1" data-src="img/cc/src-to-asm-1.svg" alt="xxx">
-            <img class="fragment current-visible fade-in replace" frament-index="2" data-src="img/cc/src-to-asm-2.svg" alt="xxx">
-            <img class="fragment current-visible fade-in replace" frament-index="3" data-src="img/cc/src-to-asm-3.svg" alt="xxx">
-            <img class="fragment current-visible fade-in replace" frament-index="4" data-src="img/cc/src-to-asm-phases.svg" alt="xxx" style="margin-top: -7px;">
-            <br><br><br><br>
-            <aside class="notes">
-              IR: Static Single Assignment / 3-Adress-Code
-            </aside>
-          </section>
-          <section>
-            <h3>Three-Phase-Design</h3>
-            <div style="width: 50%; height: 300px; margin: 0px 25%; text-align: center;">
-              <img class="fragment current-visible fade-in replace" frament-index="0" data-src="img/cc/three-phase.svg" alt="xxx">
-              <img class="fragment current-visible fade-in replace" frament-index="1" data-src="img/cc/three-phase-ir.svg" alt="xxx">
-            </div>
-            <aside class="notes">
-              * boarder set of programmers: test coverage &amp; potential contributers<br>
-              * different skills for implementing a front/opt/back<br>
-              * GCC: monolithic, no strict separation, not reusable as library
-              * JVM and .Net are opaque virtual machines, optimizer/backend not
-            </aside>
-          </section>
-          <section style="text-align: left;">
-            <h3>Challenges for a Runtime Compiler?</h3>
-            <ul>
-              <li>&rarr; compile to machine code directly</li>
-              <li>&rarr; provide memory for executable code</li>
-              <li>&rarr; link in new code at runtime</li>
-              <li>&rarr; manage dynamic allocations and lifetime</li>
-            </ul>
           </section>
         </section>
 
         <!-- ------------------------------------------------------------------------------------------------------------------ -->
 
-        <section>
-          <section>
-            <h1 style="text-align: center;">JIT Basics</h1>
+        <section class="section-tl">
+          <h3>Opportunities</h3>
+          <br>
+          <ul>
+            <li>&rarr; determine exact hardware features</li>
+            <li>&rarr; inlining for runtime-data</li>
+            <li>&rarr; hot-code optimization</li>
+            <li>&rarr; source-code deployment?</li>
+          </ul>
+        </section>
+
+        <section class="section-tl">
+          <h3>You can do it yourself!</h3>
+          <br>
+          <p>It's pretty simple actually:</p>
+          <ul>
+            <li>&rarr; allocate some virtual memory</li>
+            <li>&rarr; write machine code into it</li>
+            <li>&rarr; switch it to executable</li>
+            <li>&rarr; call/jump to the address</li>
+          </ul>
+          <br>
+          <p>
+            Example: 
+            <a target="_blank" href="https://github.com/weliveindetail/RelocationStubsPlayground/blob/master/Main.cpp">
+              RelocationStubsPlayground</a> (VC++ on Win64)
+          </p>
+        </section>
+
+        <!-- ------------------------------------------------------------------------------------------------------------------ -->
+
+        <section class="section-tl-nest">
+          <h3>But DIY is cumbersome, let's use LLVM</h3>
+          <section class="section-tl">
+            <p>
+              <b>What's that?</b><br>
+              A compiler infrastructure.<br>
+            </p>
+            <br>
+            <p>
+              <b>So...?</b><br>
+              Well basically it defines an intermediate representation.<br>
+              And it gives us a set of tools to manipulate it.
+            </p>
           </section>
-          <section>
-            <h3 style="text-align: left;">The 20000ft overview</h3>
+          <section class="section-tl">
+            <br>
+            <br>
+            <p><b>What do we gain?</b></p>
+            <table>
+              <tr>
+                <td><b>Compile</b></td>
+                <td>&rarr; mature API to emit LLVM IR</td>
+              </tr>
+              <tr>
+                <td><b>Link</b></td>
+                <td>
+                  <ul>
+                    <li>&rarr; built-in relocations resolution</li>
+                    <li>&rarr; guided symbol resolution with good extension points (e.g. LambdaResolver)</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td><b>Load</b></td>
+                <td>&rarr; built-in memory managers</td>
+              </tr>
+              <tr>
+                <td><b>Run</b></td>
+                <td></td>
+              </tr>
+            </table>
+            <p>Basically it takes away all the really heavy stuff!</p>
+          </section>
+        </section>
+
+        <!-- ------------------------------------------------------------------------------------------------------------------ -->
+
+        <section class="section-tl-nest">
+          <h3>JIT Basics</h3>
+
+          <section class="section-tl">
+            <br>
+            <br>
+            <p><b>The 20000ft overview</b></p>
             <img class="fragment current-visible replace" frament-index="0" data-src="img/jit/basics-01.svg" alt="xxx">
             <img class="fragment current-visible replace" frament-index="1" data-src="img/jit/basics-02.svg" alt="xxx">
             <img class="fragment current-visible replace" frament-index="2" data-src="img/jit/basics-03.svg" alt="xxx">
@@ -279,7 +307,7 @@
             </aside>
           </section>
           <section class="section-tl">
-            <h3>Engines</h3>
+            <p><b>Engines</b></p>
             <ul>
               <li>&rarr; <i>"legacy JIT"</i> removed with 3.6</li>
               <li>&rarr; MCJIT introduced with 3.4</li>
@@ -287,7 +315,7 @@
             </ul>
           </section>
           <section class="section-tl">
-            <h3>MCJIT (Machine Code JIT)</h3>
+            <p><b>MCJIT</b> (<b>M</b>achine <b>C</b>ode <b>JIT</b>)</p>
             <ul>
               <li>&rarr; monolithic</li>
               <li>&rarr; based on MC API's (CPU instruction-set tools)</li>
@@ -297,7 +325,7 @@
             </ul>
           </section>
           <section class="section-tl">
-            <h3>ORC</h3>
+            <p><b>ORC</b> (<b>O</b>n-<b>R</b>equest <b>C</b>ompilation)</p>
             <ul>
               <li>&rarr; set of components: layers and utils</li>
               <li>&rarr; uses MC layer &amp; handles module sets</li>
@@ -321,12 +349,11 @@
 
         <!-- ------------------------------------------------------------------------------------------------------------------ -->
 
-        <section>
-          <section>
-            <h1>LLVM IR</h1>
-          </section>
+        <section class="section-tl-nest">
+          <h3>A few notes on LLVM IR</h3>
+
           <section class="section-tl">
-            <h3>Example</h3>
+            <p><b>Example</b></p>
             <pre style="font-size: 0.5em;"><code class="x86asm hljs" style="max-height: 100%;" data-trim>
 ; ModuleID = 'test'
 target datalayout = "e-m:o-i64:64-f80:128-n8:16:32:64-S128"
@@ -360,7 +387,7 @@ entry:
             </aside>
           </section>
           <section class="section-tl">
-            <h3>Properties</h3>
+            <p><b>Properties</b></p>
             <ul>
               <li>&rarr; Static Single Assignment (SSA)</li>
               <li>&rarr; type safety, low-level operations, flexibility</li>
@@ -370,11 +397,18 @@ entry:
             </ul>
           </section>
           <section class="section-tl">
-            <h3>Representations</h3>
+            <p><b>Representations</b></p>
             <ul>
               <li>&rarr; in-memory compiler IR</li>
               <li>&rarr; on-disk bitcode representation</li>
               <li>&rarr; human readable text form</li>
+            </ul>
+            <br>
+            <br>
+            <p><b>Restrictions</b></p>
+            <ul>
+              <li>&rarr; designed for compiler optimizations</li>
+              <li>&rarr; neither fully portable nor fully stable</li>
             </ul>
             <aside class="notes">
               Optimization for:<br>
@@ -384,11 +418,6 @@ entry:
             </aside>
           </section>
           <section class="section-tl">
-            <h3>Restrictions</h3>
-            <ul>
-              <li>&rarr; designed for compiler optimizations</li>
-              <li>&rarr; neither fully portable nor fully stable</li>
-            </ul>
             <aside class="notes">
               * not necessarily identical on different platforms<br>
               * Google (Portable) Native Client ---> issues<br>
@@ -398,16 +427,17 @@ entry:
 
         <!-- ------------------------------------------------------------------------------------------------------------------ -->
 
-        <section>
-          <section>
-            <h1 style="text-align: center;">How can I &hellip;?</h1>
+        <section class="section-tl-nest">
+          <h3>How can I &hellip;?</h3>
+
+          <section class="section-tl">
+            <p>
+              <b>Generate IR</b><br>
+              &rarr; let's get to the code!
+            </p>
           </section>
           <section class="section-tl">
-            <h3>How can I generate IR?</h3>
-            &rarr; let's get to the code!
-          </section>
-          <section class="section-tl">
-            <h3>How can I inspect my IR?</h3>
+            <p><b>Inspect my IR?</b></p>
             <pre style="width: 99%;"><code class="cpp hljs" data-trim>
 llvm::Module* myModule = ...
 myModule->dump();
@@ -418,7 +448,9 @@ myValue->dump();
             &rarr; (almost) everything is as <a target="_blank" href="http://llvm.org/docs/doxygen/html/classllvm_1_1Value.html">Value</a>
           </section>
           <section class="section-tl">
-            <h3>How can I call external code?</h3>
+            <br>
+            <br>
+            <p><b>Call external code?</b></p>
             <pre style="width: 99%;"><code class="cpp hljs" data-trim>
 // declare function
 Type* retTy = Type::getInt8PtrTy(Ctx);
@@ -445,7 +477,7 @@ Value* typedPtr = Builder.CreateBitCast(voidPtr, varTy->getPointerTo(), "double_
             </ul>
           </section>
           <section class="section-tl">
-            <h3>How can I call my own code?</h3>
+            <p><b>Call my own code?</b></p>
             <pre style="width: 99%;"><code class="cpp hljs" data-trim>
 extern "C" void* myAlloc(long long bytes)
 {
@@ -466,7 +498,7 @@ Value* mallocFn = M->getOrInsertFunction("myAlloc", mallocSig);
             </ul>
           </section>
           <section class="section-tl">
-            <h3>How can I define my own data types?</h3>
+            <p><b>Define compound data types?</b></p>
             <pre style="width: 99%;"><code class="cpp hljs" data-trim>
 std::vector&lt;Type*&gt; memberTys = {
   Type::getInt32Ty(Ctx),
@@ -483,7 +515,7 @@ StructType* myStructTy = StructType::create(Ctx, memberTys, "myStructTy");
             </ul>
           </section>
           <section class="section-tl">
-            <h3>How can I access fields?</h3>
+            <p><b>Access fields?</b></p>
             <pre style="width: 99%;"><code class="cpp hljs" data-trim>
 // write init value to struct member
 Value* doublePtr = Builder.CreateStructGEP(myStructTy, typedPtr, 1, "member_ptr");
@@ -1023,7 +1055,7 @@ static bool isLoopInvariant(const Value *V, const Loop *L) {
 				history: true,
 				center: true,
 
-				transition: 'concave', // none/fade/slide/convex/concave/zoom
+				transition: 'none', // none/fade/slide/convex/concave/zoom
 
 				// Optional reveal.js plugins
 				dependencies: [
