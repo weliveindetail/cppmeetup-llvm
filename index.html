@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>LLVM-based JIT Compilers</title>
+		<title>Compiling at Runtime with LLVM</title>
 
 		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
 		<meta name="author" content="Hakim El Hattab">
@@ -30,6 +30,11 @@
         margin-top: -20px;
         opacity: 1.0;
         float: right; }
+
+      .reveal .slides section a.url {
+         font-size: 0.7em;
+         line-height: 0.7em;
+       }
 
       .reveal .slides section.section-mc {
         text-align: center;
@@ -110,7 +115,7 @@
 
 				<section>
           <img data-src="img/llvm-logo.svg" width="300" height="300" alt="xxx" style="border: 0px; margin: 2px;">
-					<h2>LLVM-based JIT Compilers</h2>
+					<h3>Compiling at Runtime w/ LLVM</h3>
 					<small style="width: 72%; padding: 10px 0px;">
             <table style="width: 100%;">
               <tr><td style="text-align: right;">
@@ -205,7 +210,7 @@
         <!-- ------------------------------------------------------------------------------------------------------------------ -->
 
         <section class="section-tl">
-          <h3>Opportunities</h3>
+          <h3>JIT Opportunities</h3>
           <br>
           <ul>
             <li>&rarr; determine exact hardware features</li>
@@ -216,7 +221,7 @@
         </section>
 
         <section class="section-tl">
-          <h3>You can do it yourself!</h3>
+          <h3>You can JIT yourself!</h3>
           <br>
           <p>It's pretty simple actually:</p>
           <ul>
@@ -245,37 +250,21 @@
             <br>
             <p>
               <b>So...?</b><br>
-              Well basically it defines an intermediate representation.<br>
-              And it gives us a set of tools to manipulate it.
+              Well it defines an intermediate representation.<br>
+              And it provides a set of tools to manipulate it.
             </p>
           </section>
           <section class="section-tl">
             <br>
             <br>
             <p><b>What do we gain?</b></p>
-            <table>
-              <tr>
-                <td><b>Compile</b></td>
-                <td>&rarr; mature API to emit LLVM IR</td>
-              </tr>
-              <tr>
-                <td><b>Link</b></td>
-                <td>
-                  <ul>
-                    <li>&rarr; built-in relocations resolution</li>
-                    <li>&rarr; guided symbol resolution with good extension points (e.g. LambdaResolver)</li>
-                  </ul>
-                </td>
-              </tr>
-              <tr>
-                <td><b>Load</b></td>
-                <td>&rarr; built-in memory managers</td>
-              </tr>
-              <tr>
-                <td><b>Run</b></td>
-                <td></td>
-              </tr>
-            </table>
+            <ul>
+              <li>&rarr; cross-platform, cross-architecture</li>
+              <li>&rarr; codegen: mature API to emit LLVM IR</li>
+              <li>&rarr; linking: built-in relocation resolution, guided symbol resolution with good extension points (e.g. LambdaResolver)</li>
+              <li>&rarr; loading: built-in memory managers</li>
+            </ul>
+            <br>
             <p>Basically it takes away all the really heavy stuff!</p>
           </section>
         </section>
@@ -353,7 +342,7 @@
           <h3>A few notes on LLVM IR</h3>
 
           <section class="section-tl">
-            <p><b>Example</b></p>
+            <br><br>
             <pre style="font-size: 0.5em;"><code class="x86asm hljs" style="max-height: 100%;" data-trim>
 ; ModuleID = 'test'
 target datalayout = "e-m:o-i64:64-f80:128-n8:16:32:64-S128"
@@ -397,14 +386,13 @@ entry:
             </ul>
           </section>
           <section class="section-tl">
+            <br>
             <p><b>Representations</b></p>
             <ul>
               <li>&rarr; in-memory compiler IR</li>
               <li>&rarr; on-disk bitcode representation</li>
               <li>&rarr; human readable text form</li>
             </ul>
-            <br>
-            <br>
             <p><b>Restrictions</b></p>
             <ul>
               <li>&rarr; designed for compiler optimizations</li>
@@ -415,10 +403,7 @@ entry:
               * fast access/processing<br>
               * fast serialization/deserialization<br>
               * readablility
-            </aside>
-          </section>
-          <section class="section-tl">
-            <aside class="notes">
+              Restrictions:
               * not necessarily identical on different platforms<br>
               * Google (Portable) Native Client ---> issues<br>
             </aside>
@@ -428,148 +413,35 @@ entry:
         <!-- ------------------------------------------------------------------------------------------------------------------ -->
 
         <section class="section-tl-nest">
-          <h3>How can I &hellip;?</h3>
+          <h3>Getting Started</h3>
 
           <section class="section-tl">
+            <br>
+            <br>
             <p>
-              <b>Generate IR</b><br>
-              &rarr; let's get to the code!
+              <b>Setup LLVM</b>
+              <ul>
+                <li>
+                  &rarr; no headers and libraries in prebuilt binaries anymore<br>
+                  <a class="url" target="_blank" href="http://lists.llvm.org/pipermail/cfe-dev/2016-January/046702.html">
+                                                       http://lists.llvm.org/pipermail/cfe-dev/2016-January/046702.html</a>
+                </li>
+                <li>
+                  &rarr; step-by-step guide for building with CMake:<br>
+                  <a class="url" target="_blank" href="http://llvm.org/docs/CMake.html#quick-start">
+                                                       http://llvm.org/docs/CMake.html#quick-start</a>
+                </li>
+                <li>
+                  &rarr; examples and tips to reduce build times:<br>
+                  <a class="url" target="_blank" 
+                     href="https://github.com/weliveindetail/JitFromScratch/#user-content-1-build-and-install-llvm">
+                           https://github.com/weliveindetail/JitFromScratch/#user-content-1-build-and-install-llvm</a>
+                </li>
+              </ul>
             </p>
           </section>
           <section class="section-tl">
-            <p><b>Inspect my IR?</b></p>
-            <pre style="width: 99%;"><code class="cpp hljs" data-trim>
-llvm::Module* myModule = ...
-myModule->dump();
-
-llvm::Value* myValue = ...
-myValue->dump();
-            </code></pre>
-            &rarr; (almost) everything is as <a target="_blank" href="http://llvm.org/docs/doxygen/html/classllvm_1_1Value.html">Value</a>
-          </section>
-          <section class="section-tl">
-            <br>
-            <br>
-            <p><b>Call external code?</b></p>
-            <pre style="width: 99%;"><code class="cpp hljs" data-trim>
-// declare function
-Type* retTy = Type::getInt8PtrTy(Ctx);
-ArrayRef&lt;Type*&gt; argTys = { Type::getInt64Ty(Ctx) };
-FunctionType* mallocSig = FunctionType::get(retTy, argTys, false);
-
-Value* mallocFn = M->getOrInsertFunction("malloc", mallocSig);
-
-// compile call to allocate double
-Type* varTy = Type::getDoubleTy(Ctx);
-Constant* dataSize = ConstantExpr::getSizeOf(varTy);
-CallInst* mallocCall = CallInst::Create(mallocFn, dataSize, "void_ptr");
-Builder.GetInsertBlock()->getInstList().push_back(mallocCall);
-
-Value* voidPtr = mallocCall;
-Value* typedPtr = Builder.CreateBitCast(voidPtr, varTy->getPointerTo(), "double_ptr");
-            </code></pre>
-            <ul>
-              <li>
-                &rarr; plus a symbol resolver in <code>SimpleOrcJit</code>:<br>
-                <a style="font-size: 0.8em;" href="https://github.com/weliveindetail/JitFromScratch/blob/example/malloc/SimpleOrcJit.h#L27">
-                  http://.../JitFromScratch/blob/example/malloc/SimpleOrcJit.h#L27</a>
-              </li>
-            </ul>
-          </section>
-          <section class="section-tl">
-            <p><b>Call my own code?</b></p>
-            <pre style="width: 99%;"><code class="cpp hljs" data-trim>
-extern "C" void* myAlloc(long long bytes)
-{
-  return malloc(bytes);
-}
-...
-compiler->addGlobalMapping("myAlloc", (void*)myAlloc);
-...
-Value* mallocFn = M->getOrInsertFunction("myAlloc", mallocSig);
-...
-            </code></pre>
-            <ul>
-              <li>
-                &rarr; plus a new layer to resolve your symbol:<br>
-                <a style="font-size: 0.8em;" href="https://github.com/weliveindetail/JitFromScratch/blob/example/own-externals/SimpleOrcJit.h#L75">
-                  http://.../example/own-externals/SimpleOrcJit.h#L75</a>
-              </li>
-            </ul>
-          </section>
-          <section class="section-tl">
-            <p><b>Define compound data types?</b></p>
-            <pre style="width: 99%;"><code class="cpp hljs" data-trim>
-std::vector&lt;Type*&gt; memberTys = {
-  Type::getInt32Ty(Ctx),
-  Type::getDoubleTy(Ctx)
-};
-
-StructType* myStructTy = StructType::create(Ctx, memberTys, "myStructTy");
-            </code></pre>
-            <ul>
-              <li>
-                <a style="font-size: 0.8em;" href="https://github.com/weliveindetail/JitFromScratch/blob/example/struct-type/JitFromScratch.cpp#L48">
-                  https://.../example/struct-type/JitFromScratch.cpp#L48</a>
-              </li>
-            </ul>
-          </section>
-          <section class="section-tl">
-            <p><b>Access fields?</b></p>
-            <pre style="width: 99%;"><code class="cpp hljs" data-trim>
-// write init value to struct member
-Value* doublePtr = Builder.CreateStructGEP(myStructTy, typedPtr, 1, "member_ptr");
-Value* doubleInitVal = ConstantFP::get(Type::getDoubleTy(Ctx), 3.1415);
-
-Builder.CreateStore(doubleInitVal, doublePtr);
-            </code></pre>
-            <ul>
-              <li>
-                <a style="font-size: 0.8em;" href="https://github.com/weliveindetail/JitFromScratch/blob/example/getelementptr/JitFromScratch.cpp#L86">
-                  https://.../example/getelementptr/JitFromScratch.cpp#L86</a>
-              </li>
-            </ul>
-          </section>
-        </section>
-
-        <!-- ------------------------------------------------------------------------------------------------------------------ -->
-
-        <section>
-          <section>
-            <h1 style="text-align: center;">Getting Started</h1>
-          </section>
-          <section class="section-tl">
-            <h3>Setup LLVM</h3>
-            <ul>
-              <li>
-                &rarr; Build from source with CMake:<br>
-                <a target="_blank" href="http://llvm.org/docs/CMake.html">http://llvm.org/docs/CMake.html</a><br>
-                <a target="_blank" href="http://clang.llvm.org/get_started.html">http://clang.llvm.org/get_started.html</a>
-              </li>
-              <li>
-                &rarr; Pre-built binaries:<br>
-                <a traget="_blank" href="http://llvm.org/releases/download.html">http://llvm.org/releases/download.html</a>
-              </li>
-              <li>
-                &rarr; Homebrew on Mac:<br>
-                <code>
-                  $ brew install llvm --with-clang --with-asan
-                  &nbsp;&nbsp;&nbsp;&nbsp;
-                  &nbsp;&nbsp;&nbsp;&nbsp;
-                  &nbsp;&nbsp;&nbsp;&nbsp;
-                  &nbsp;&nbsp;&nbsp;&nbsp;
-                  &nbsp;&nbsp;&nbsp;&nbsp;
-                                      --with-libcxx --HEAD
-                </code>
-              </li>
-              <li>
-                &rarr; Scoop on Windows:<br>
-                <code>$ scoop install llvm</code>
-              </li>
-            </ul>
-          </section>
-          <section class="section-tl">
-            <h3>Command Line Tips</h3>
+            <p><b>Command Line</b></p>
             <code>clang++ `llvm-config --libs --system-libs`<br>
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                           -D__STDC_CONSTANT_MACROS<br>
@@ -581,14 +453,14 @@ Builder.CreateStore(doubleInitVal, doublePtr);
                           -o myExec mySource.cpp</code>
           </section>
           <section class="section-tl">
-            <h3>CMake Tips</h3>
+            <p><b>CMake Tips</b></p>
             <ul>
               <li>&rarr; <code>find_package(LLVM)</code></li>
               <li>&rarr; <code>llvm_map_components_to_libnames(LLVM_LIBS <br>
                                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                   core orcjit x86asmparser x86codegen)</code></li>
               <li>&rarr; some quirks for cross-platform details<br>
-                         <a style="font-size: 0.7em" target="_blank" 
+                         <a class="url" target="_blank" 
                             href="https://github.com/weliveindetail/StatefulJit/blob/master/CMakeLists.txt">
                                   https://github.com/weliveindetail/StatefulJit/blob/master/CMakeLists.txt</a></li>
             </ul>
@@ -599,7 +471,8 @@ Builder.CreateStore(doubleInitVal, doublePtr);
             </aside>
           </section>
           <section class="section-tl">
-            <h3>Checkout the tools</h3>
+            <br>
+            <p><b>Checkout the tools</b></p>
 
             See the IR that clang generates from C++
             <ul>
@@ -626,389 +499,149 @@ Builder.CreateStore(doubleInitVal, doublePtr);
             </ul>
           </section>
           <section class="section-tl">
-            <h3 style="margin: 0px;">Explore code generation</h3>
-            <a target="_blank" href="http://github.com/weliveindetail/JitFromScratch">
-                                     http://github.com/weliveindetail/JitFromScratch</a>
-            <ul>
-              <li>&rarr; get familiar with the API for IR codegen</li>
-              <li>&rarr; general approach is <i>"see how clang does it"</i></li>
-              <li>&rarr; few answers on stackoverflow</li>
-              <li>&rarr; can be challenging</li>
-            </ul>
+            <p>
+              <b>Explore code generation</b><br>
+              <a class="url" target="_blank" href="http://github.com/weliveindetail/JitFromScratch">
+                                                   http://github.com/weliveindetail/JitFromScratch</a>
+              <ul>
+                <li>&rarr; get familiar with the API for IR codegen</li>
+                <li>&rarr; few answers on stackoverflow</li>
+                <li>&rarr; typical reply is <i>"see how clang does it"</i></li>
+                <li>&rarr; can be challenging</li>
+              </ul>
+            </p>
           </section>
           <section class="section-tl">
-            <h3 style="margin: 0px;">Learn basic front-end construction</h3>
-            <a target="_blank" href="http://llvm.org/docs/tutorial/index.html">
-                                     http://llvm.org/docs/tutorial/index.html</a>
-            <ul>
-              <li>&rarr; guided conventional C++ coding</li>
-              <li>&rarr; great starting point for language experiments</li>
-              <li>&rarr; focus is on functionality, not on good style!</li>
-              <li>&rarr; easy but time-consuming</li>
-            </ul>
-          </section>
-          <section class="section-tl">
-            <h3 style="margin: 0px;">Learn how to write a pass</h3>
-            <a target="_blank" href="http://llvm.org/docs/WritingAnLLVMPass.html">
-                                     http://llvm.org/docs/WritingAnLLVMPass.html</a>
-            <ul>
-              <li>&rarr; guided C++ coding</li>
-              <li>&rarr; requires some compiler and IR insight</li>
-              <li>&rarr; useful for optimization or instrumentation</li>
-              <li>&rarr; advanced</li>
-            </ul>
-          </section>
-          <section class="section-tl">
-            <h3>Keep in mind</h3>
-            <ul>
-              <li>&rarr; it's a great infrastructure, but it's still not trivial</li>
-              <li>&rarr; IR spec changes over time, e.g. llvm.js is still on 3.2 (2012)</li>
-              <li>&rarr; C++ has no standard ABI, take care when linking against other compiler's code</li>
-              <li>&rarr; turn off exceptions and RTTI</li>
-            </ul>
+            <p>
+              <b>Keep in mind</b>
+              <ul>
+                <li>&rarr; it's a great infrastructure, but it's not trivial</li>
+                <li>&rarr; IR spec changes over time, e.g. llvm.js is still on 3.2 (2012)</li>
+                <li>&rarr; C++ has no standard ABI, take care when linking against other compiler's code</li>
+                <li>&rarr; on Windows, exceptions from jitted code cannot be caught yet
+                    <a class="url" href="https://llvm.org/bugs/show_bug.cgi?id=24233">
+                      https://llvm.org/bugs/show_bug.cgi?id=24233</a></li>
+              </ul>
+            </p>
           </section>
         </section>
 
         <!-- ------------------------------------------------------------------------------------------------------------------ -->
 
-        <section>
-          <section>
-            <h1 style="text-align: center;">Conceptual Advantages</h1>
-          </section>
+        <section class="section-tl-nest">
+          <h3>How can I &hellip;?</h3>
           <section class="section-tl">
-            <h3>Reusability is the key</h3>
-            <ul>
-              <li>&rarr; extremely reuse-friendly / hackable<br>due to modular design and permissive license</li>
-              <li>&rarr; static compilers and runtime compilers in one framework</li>
-              <li>&rarr; large active community:<br>
-                  <a target="_blank" href="http://lists.llvm.org/pipermail/llvm-dev/">http://lists.llvm.org/pipermail/llvm-dev/</a><br>
-                  <a target="_blank" href="http://lists.llvm.org/pipermail/cfe-dev/">http://lists.llvm.org/pipermail/cfe-dev/</a></li>
-            </ul>
-            <aside class="notes">
-            </aside>
-          </section>
-          <section class="section-tl">
-            <h3>Modular Optimizer</h3>
-            <ul>
-              <li>&rarr; IR is the only interface</li>
-              <li>&rarr; pipeline of distinct optimization passes</li>
-              <li>&rarr; pass manager for dependency resolution and scheduling</li>
-              <li>&rarr; <a target="_blank" href="http://www.aosabook.org/en/llvm.html">
-                                                  http://www.aosabook.org/en/llvm.html</a></li>
-            </ul>
-          </section>
-          <section class="section-tl">
-            <h3>Link-Time Optimization</h3>
-            <img data-src="img/aosa/LTO.png" alt="xxx" width="100%" height="auto" style="border: 0px;">
-            <ul>
-              <li>&rarr; no expensive serialization (naturally)</li>
-              <li>&rarr; across different source languages</li>
-            </ul>
-          </section>
-          <section class="section-tl">
-            <h3>Install-Time Optimization</h3>
-            <img data-src="img/aosa/ITO.png" alt="xxx" width="100%" height="auto" style="border: 0px;">
-            <ul>
-              <li>&rarr; delay codegen to installation (still AOT)</li>
-              <li>&rarr; instruction selection &amp; scheduling for specific machine</li>
-            </ul>
-          </section>
-          <section class="section-tl">
-            <h3>Unit Testing the Optimizer</h3>
-
-            With textual IR &amp; modular optimizer:
-            <ul>
-              <li>&rarr; unit tests for single optimization passes!</li>
-              <li>&rarr; e.g. make sure constant folding actually performed</li>
-              <li>&rarr; typical problem with source code files as input: front-ends do constant folding too!</li>
-            </ul>
-            <aside class="notes">
-              Traditional approaches:
-              * run .c file through compiler to test that it doesn't crash (GCC)
-              * compile huge programs with nightly builds and run automated user-interactions (MSVC)
-            </aside>
-          </section>
-          <section class="section-tl">
-            <h3>Why LLVM? Why now?</h3>
-            <ul>
-              <li>&rarr; people build compilers since 1952</li>
-              <li>&rarr; from the scientific point of view there is nothing new</li>
-            </ul>
-            <aside class="notes">
-              * first compiler by Grace Hopper
-              * first FORTRAN compiler released in 1957 - took 18 person-years
-              * similar IR's in JVM and .Net
-              * Three-Phase-Design is well understood and implemented in other experimental compilers like SUIF, but more specific research and not production ready
-            </aside>
-          </section>
-          <section class="section-tl">
-            <h3>In the right spot at the right time!</h3>
-            <ul>
-              <li>&rarr; native programming is back!</li>
-              <li>&rarr; many new architectures for mobile processors and GPUs</li>
-              <li>&rarr; instead of getting clocked faster, instruction sets are getting weirder</li>
-              <li>&rarr; high demand for compiler-based build tools</li>
-            </ul>
-            <aside class="notes">
-              * interest and investing in C++ and compilers grows again since 2010
-              * existing C++ compilers lack extensibility, while new standards arise
-              * weirder: instruction-level parallelism with VeryLongInstructionWords, Vectorization, massively parallel GPUs
-            </aside>
-          </section>
-        </section>
-
-        <!-- ------------------------------------------------------------------------------------------------------------------ -->
-
-        <section>
-          <section>
-            <h1 style="text-align: center;">Learning from LLVM</h1>
-          </section>
-          <section class="section-tl">
-            <blockquote cite="http://www.aosabook.org/en/llvm.html">
-              None of the subsystems in LLVM are really good until they have been rewritten at least once.
-            </blockquote>
-            <blockquote cite="http://www.aosabook.org/en/llvm.html">
-              After all, the goal isn't to be perfect, it is to keep getting better over time.
-              <cite>Chris Lattner</cite>
-            </blockquote>
-            <aside class="notes">
-              * "hack first" approach
-            </aside>
-          </section>
-          <section class="section-tl">
-            <h3 style="margin: 0px;">LLVM Coding Standards</h3>
-            <a target="_blank" href="http://llvm.org/docs/CodingStandards.html">
-                                     http://llvm.org/docs/CodingStandards.html</a>
-            <ul>
-              <li>&rarr; good coverage, great reasoning</li>
-              <li>&rarr; few style conventions like naming and bracing</li>
-              <li>&rarr; <i>"only pay for what you use"</i> compatible</li>
-            </ul>
-          </section>
-          <section class="section-tl">
-            <h3 style="margin: 0px;">Hand-rolled RTTI</h3>
-            <a target="_blank" href="http://llvm.org/docs/HowToSetUpLLVMStyleRTTI.html">
-                                     http://llvm.org/docs/HowToSetUpLLVMStyleRTTI.html</a>
-
-            <pre style="width: 99%;"><code class="cpp hljs" data-trim>
-static bool isLoopInvariant(const Value *V, const Loop *L) {
-  if (isa&lt;Constant&gt;(V) || isa&lt;Argument&gt;(V) || isa&lt;GlobalValue&gt;(V))
-    return true;
-
-  // Otherwise, it must be an instruction...
-  return !L->contains(cast&lt;Instruction&gt;(V)->getParent());
-}
-            </code></pre>
-
-            <ul>
-              <li>&rarr; no implicit limitations</li>
-              <li>&rarr; more efficient and flexible then built-in RTTI</li>
-              <li>&rarr; fully explicit &mdash; use only where necessary</li>
-            </ul>
-            <aside class="notes">
-              * built-in RTTI limitation: dynamic_cast only works on classes that have a v-table
-              * default “99.9% of use cases” just implement classof
-            </aside>
-          </section>
-          <section class="section-tl">
-            <h3 style="margin: 0px;"><code>ilist&lt;T&gt;</code> &mdash; an intrusive doubly-linked list</h3>
-            <a target="_blank" style="font-size: 0.9em;" href="http://llvm.org/docs/ProgrammersManual.html#llvm-adt-ilist-h">
-                                     http://llvm.org/docs/ProgrammersManual.html#llvm-adt-ilist-h</a>
-
-            <ul>
-              <li>&rarr; efficiently stores polymorphic objects</li>
-              <li>&rarr; used for Instructions, BasicBlocks, etc.</li>
-              <li>&rarr; minimum-overhead (never touch the heap)</li>
-              <li>&rarr; no invalidation on modification &amp; constant-time splice</li>
-              <li>&rarr; STL-compliant &amp; recently <a target="_blank" href="https://groups.google.com/forum/#!topic/llvm-dev/wGBO6J-ttZQ">cleaned up</a></li>
-            </ul>
-
-            <aside class="notes">
-              * traversal logic requires no knowledge of the downcast nodes
-              * never touch the heap
-            </aside>
-          </section>
-          <section class="section-tl">
-            <h3 style="margin: 0px;">Bugpoint</h3>
-            <a target="_blank" href="http://llvm.org/docs/Bugpoint.html">
-                                     http://llvm.org/docs/Bugpoint.html</a>
-
-            <ul>
-              <li>&rarr; automatically reduces the amount of code necessary to reproduce a bug</li>
-              <li>&rarr; trade off programmer time for computer time</li>
-            </ul>
-          </section>
-        </section>
-
-        <!-- ------------------------------------------------------------------------------------------------------------------ -->
-
-        <section>
-          <section>
-            <h1 style="text-align: center;">Projects</h1>
-          </section>
-          <section class="section-tl">
-            <img data-src="img/projects/llvm-logo.svg" width="400" height="400" alt="xxx" class="logo-tr">
-            <br><br><br><br><br>
-            <h3 style="margin: 0px;">Clang &mdash; a compiler</h3>
-            <a target="_blank" href="http://clang.llvm.org/">http://clang.llvm.org/</a>
-            <ul>
-              <li>&rarr; LLVM reference project</li>
-              <li>&rarr; self-hosting since February, 2nd 2010</li>
-              <li>&rarr; actively developed by Apple, Google, Microsoft, ARM, Sony, Intel, AMD, etc. &amp; the community</li>
-              <li>&rarr; a great playground, also for the C++ standards committee</li>
-            </ul>
-          </section>
-          <section class="section-tl">
-            <img data-src="img/projects/root-banner.png" width="529" height="128" alt="xxx" class="logo-tr" style="margin-right: -56px;">
-            <br><br><br>
-            <h3 style="margin: 0px;">Cling &mdash; an interpreter</h3>
-            <a target="_blank" href="https://root.cern.ch/cling-brief">https://root.cern.ch/cling-brief</a>
-            <ul>
-              <li>&rarr; replaces old CINT command line interpreter</li>
-              <li>&rarr; rapid development tool for high energy physicists</li>
-            </ul>
             <br>
-          </section>
-          <section class="section-tl">
-            <img data-src="img/projects/google-logo.png" width="200" height="200" alt="xxx" class="logo-tr">
-            <br><br><br><br>
-            <h3 style="margin: 0px;">AddressSanitizer &mdash; a development tool</h3>
-            <a target="_blank"
-               href="https://github.com/google/sanitizers/wiki/AddressSanitizer">
-                     https://github.com/google/sanitizers/wiki/AddressSanitizer</a>
-            <ul>
-              <li>&rarr; clang compiler flag <code>-fsanitize=address</code></li>
-              <li>&rarr; detects dangling pointer dereference, stack buffer overflow, 
-                         non-deterministic initialization, etc.</li>
-              <li>&rarr; essentially implemented as LLVM ("optimization") pass</li>
-              <li>&rarr; very low overhead: typically ~2x</li>
-            </ul>
-          </section>
-          <section class="section-tl">
-            <img data-src="img/projects/mapd_banner.png" width="200" height="auto" alt="xxx" class="logo-tr">
-            <br><br><br><br>
-            <h3 style="margin: 0px;">MapD &mdash; a visualization tool for big data</h3>
-            <a target="_blank" 
-              href="https://devblogs.nvidia.com/parallelforall/mapd-massive-throughput-database-queries-llvm-gpus/">
-                    https://devblogs.nvidia.com/parallelforall/mapd-massive-throughput-database-queries-llvm-gpus/</a>
-            <ul>
-              <li>&rarr; JIT compiles database queries for runtime efficiency</li>
-              <li>&rarr; code generation time under 30ms</li>
-              <li>&rarr; LLVM IR to target specific CPU and/or GPU</li>
-              <li>&rarr; uses system runtime information as compile-time input for queries</li>
-            </ul>
-          </section>
-          <section class="section-tl">
-            <img data-src="img/projects/souper-cse-logo.png" width="160" height="auto" alt="xxx" class="logo-tr" style="margin: 20px;">
-            <br><br><br><br>
-            <h3 style="margin: 0px;">Souper &mdash; an automatic optimizer</h3>
-            <a target="_blank" href="https://github.com/google/souper">
-                                     https://github.com/google/souper</a>
-            <ul>
-              <li>&rarr; theorem solver to identify peephole optimizations</li>
-              <li>&rarr; mostly eliminating dead code by tracking value ranges</li>
-              <li>&rarr; e.g. save 4 bytes in some bitwise operation &mdash; not much but happens around 21k times when compiling LLVM</li>
-              <li>&rarr; research targets systems that learn optimization automatically</li>
-            </ul>
-            <aside class="notes">
-              * compiler ouput is far from optimum
-              * not because devs are stupid, but code transformations have side effects (already with simple ones like inlining or const folding)
-              * much opportunity for tiny optimizations -> writing them manually makes it hard to get correctness
-              * uses an SMT solver (basically constraint satisfaction)
-            </aside>
-          </section>
-          <section class="section-tl">
-            <img data-src="img/projects/emscripten_logo_full.png" width="408" height="111" alt="xxx" class="logo-tr">
-            <br><br><br>
-            <h3 style="margin: 0px;">Emscripten &mdash; a source-to-source compiler</h3>
-            <a target="_blank"
-               href="https://github.com/kripken/emscripten">
-                     https://github.com/kripken/emscripten</a>
-            <ul>
-              <li>&rarr; compiles C/C++ to asm.js</li>
-              <li>&rarr; examples: Unreal Engine 3, SQLite, Lua VM</li>
-              <li>&rarr; <i>"near-native"</i> speed, but very depending on use-case and client setup</li>
-              <li>&rarr; <b>note:</b> code size grows rapidly &mdash; less efficient transfer, parsing and locality of reference</li>
-            </ul>
-          </section>
-          <section class="section-tl">
-            <img data-src="img/projects/wasm-logo.png" width="auto" height="180" alt="xxx" class="logo-tr">
             <br>
-            <h3 style="margin: 0px;">Binaryen &mdash;<br> the WebAssembly toolchain</h3>
-            <a target="_blank" 
-              href="https://github.com/WebAssembly/binaryen">
-                    https://github.com/WebAssembly/binaryen</a>
             <ul>
-              <li>&rarr; <b>wasm</b>: portable, size- and load-time-efficient format suitable for compilation to the web</li>
-              <li>&rarr; <b>binaryen</b>: parse &amp; compile to &amp; from wasm, interprete and polyfill (fallback to asm.js)</li>
-              <li>&rarr; implemented as virtual Instruction Set Architecture directly in the upstream LLVM repo</li>
-              <li>&rarr; initial support in clang <a target="_blank" href="http://reviews.llvm.org/rL246814">already merged back</a></li>
-              <li>&rarr; plans are to ship MVP before end of 2016!</li>
+              <li class="fragment" frament-index="0">&rarr; Initialize LLVM for runtime compilation
+                <ul>
+                  <li>&middot; use <a target="_blank" href="https://github.com/weliveindetail/DecisionTreeCompiler/blob/master/driver/utility/AutoSetUpTearDownLLVM.h">RAII container</a> in real-world context</li>
+                  <li>&middot; inits are reentrant-safe</li>
+                  <li>&middot; never call <code>llvm_shutdown()</code> and reinit</li>
+                </ul>
+              </li>
+              <li class="fragment" frament-index="1">&rarr; Setup a basic compiler with ORC
+                <ul>
+                  <li>&middot; ORC = On-Request Comilation</li>
+                  <li>&middot; 2-dimensional architecture: layers &amp; tools</li>
+                  <li>&middot; <code>CompileOnDemandLayer</code> for lazy jitting<br>
+                    <a class="url" target="_blank" href="http://llvm.org/docs/tutorial/BuildingAJIT3.html">
+                                                         http://llvm.org/docs/tutorial/BuildingAJIT3.html</a>
+                  </li>
+                </ul>
+              </li>
             </ul>
           </section>
           <section class="section-tl">
-            <img data-src="img/projects/juce-logo.svg" width="200" height="auto" alt="xxx" class="logo-tr">
-            <br><br><br><br><br>
-            <h3 style="margin: 0px;">Projucer &mdash; a live coding environment</h3>
-            <a target="_blank" href="https://youtu.be/imkVkRg-geI?t=124">
-                                     https://youtu.be/imkVkRg-geI?t=123</a>
+            <br>
+            <br>
             <ul>
-              <li>&rarr; compiles JUCE C++ components on-the-fly and links them into a running executable</li>
-              <li>&rarr; rapid development of C++ based UI</li>
+              <li class="fragment" frament-index="0">&rarr; Declare a simple function</li>
+              <li class="fragment" frament-index="1">&rarr; Dump generated code</li>
+              <li class="fragment" frament-index="2">&rarr; Invoke a runtime compiled function
+                <ul>
+                  <li>&middot; access function by name</li>
+                  <li>&middot; names must be mangled (trivial for C functions)</li>
+                </ul>
+              </li>
+              <li class="fragment" frament-index="3">&rarr; Generate code for a simple function body</li>
+              <li class="fragment" frament-index="4">&rarr; Make my IR more readable</li>
             </ul>
           </section>
           <section class="section-tl">
-            <img data-src="img/projects/Question_mark.svg" width="auto" height="200" alt="xxx" class="logo-tr">
-            <br><br><br>
-            <h3 style="margin: 0px;">StatefulJIT &mdash; a research project</h3>
-            <a target="_blank" href="https://github.com/weliveindetail/StatefulJit">
-                                     https://github.com/weliveindetail/StatefulJit</a>
+            <br>
+            <br>
             <ul>
-              <li>&rarr; experimental implementation of a minimalistic language</li>
-              <li>
-                &rarr; playground to evaluate compiler-based techniques for 
-                <a target="_blank" href="https://en.wikipedia.org/wiki/Dynamic_software_updating">dynamic software updating</a>
+              <li class="fragment" frament-index="0">&rarr; Call a C-function from runtime compiled code
+                <ul>
+                  <li>&middot; declare as external function during codegen</li>
+                  <li>&middot; add symbol resolver to JIT and resolve from cstdlib</li>
+                  <li>&middot; input names are mangled already: <code>abs</code> &rarr; <code>_abs</code></li>
+                  <li>&middot; remember to call <code>LoadLibraryPermanently(nullptr)</code></li>
+                </ul>
               </li>
-              <li>&rarr; current focus is runtime state transfer for complex data types</li>
+              <li class="fragment" frament-index="1">&rarr; Finally understand <code>getelementptr</code>
+                <ul>
+                  <li>&middot; simple address offset calculation</li>
+                  <li>&middot; for arrays, compound-type members, etc.</li>
+                </ul>
+              </li>
             </ul>
           </section>
           <section class="section-tl">
-            <h3>Others..</h3>
+            <br>
+            <br>
             <ul>
-              <li>
-                <a target="_blank" href="https://github.com/ldc-developers/ldc">LDC</a>:
-                LLVM D Compiler (alpha-state)
+              <li class="fragment" frament-index="0">&rarr; Call a C++ function from runtime compiled code
+                <ul>
+                  <li>&middot; declare with mangled name during codegen</li>
+                  <li class="fragment" frament-index="1">
+                    &middot; gcc-like ABI:<br>
+                    <code>customIntAllocator</code> &rarr;<br>
+                    <code>__Z18customIntAllocatori</code>
+                  </li>
+                  <li class="fragment" frament-index="2">
+                  &middot; msvc ABI:<br>
+                    <code>customIntAllocator</code> &rarr; 
+                    <code>?customIntAllocator@@YAPEAHH@Z</code>
+                  </li>
+                  <li class="fragment" frament-index="3">
+                    &middot; for Windows support use:<br>
+                    <a target="_blank" href="http://clang.llvm.org/doxygen/MicrosoftMangle_8cpp_source.html">Clang's mangler</a> or 
+                    <a target="_blank" href="https://github.com/weliveindetail/JitFromScratch/commits/windows-fixes">explicit mappings</a>
+                  </li>
+                </ul>
               </li>
-              <li>
-                <a target="_blank" href="https://www.rust-lang.org/">Rust</a>:
-                systems programming language
+            </ul>
+          </section>
+          <section class="section-tl">
+            <br>
+            <br>
+            <ul>
+              <li class="fragment" frament-index="0">&rarr; Use automatic optimizations in my compiler
+                <ul>
+                  <li>&middot; <code>IRTransformLayer</code> to invoke optimizer</li>
+                  <li>&middot; IPO's <code>PassManagerBuilder</code> to populate passes</li>
+                  <li>&middot; IPO = Interprocedural Transformations</li>
+                  <li>&middot; control optimization details with flags, e.g.<br>
+                    <code>BBVectorize</code> &rarr; Basic-Block vectorization<br>
+                    <code>SLPVectorize</code> &rarr; <a target="_blank" href="http://llvm.org/docs/Vectorizers.html#the-slp-vectorizer">
+                      Superword-Level Parallelism</a>
+                  </li>
+                </ul>
               </li>
-              <li>
-                <a target="_blank" href="https://developer.apple.com/swift/">Swift</a>:
-                Apple's attempt to replace Objective-C
-              </li>
-              <li>
-                <a target="_blank" href="http://llvm.org/pubs/2010-09-HASKELLSYM-LLVM-GHC.pdf">GHC</a>:
-                Glasgow Haskell Compiler<br>
-              </li>
-              <li>
-                <a target="_blank" href="https://bitbucket.org/purelang/pure-lang/wiki/Faust2">FAUST</a>:
-                Functional Audio Stream
-              </li>
-              <li>
-                <a target="_blank" href="https://github.com/rubinius/rubinius">Rubinius</a>:
-                high-performance env. for running Ruby code
-              </li>
-              <li>
-                <a target="_blank" href="https://github.com/dotnet/llilc">LLILC</a>:
-                aims to compile .NET's CoreCLR to LLVM IR<br>
-              </li>
-              <li>
-                <a target="_blank" href="http://vuo.org/node/31">Vuo</a>:
-                Visual programming environment
-              </li>
-              <li>
-                and so on...
+            </ul>
+          </section>
+          <section class="section-tl">
+            <br>
+            <br>
+            <ul>
+              <li class="fragment" frament-index="1">&rarr; Cache my binaries on disk
+                <ul>
+                  <li>&middot; implement <code>llvm::ObjectCache</code></li>
+                  <li>&middot; pass instance to <code>IRCompileLayer</code></li>
+                </ul>
               </li>
             </ul>
           </section>
@@ -1029,8 +662,13 @@ static bool isLoopInvariant(const Value *V, const Loop *L) {
             <br><br><br>
             <h1 style="text-align: center;">Questions?</h1>
             <br>
+            Code Examples:<br>
             <a target="_blank" href="https://github.com/weliveindetail/JitFromScratch">
                                      https://github.com/weliveindetail/JitFromScratch</a>
+            <br><br>
+            Referred Projects:<br>
+            <a target="_blank" href="https://github.com/weliveindetail/DecisionTreeCompiler">
+                                     https://github.com/weliveindetail/DecisionTreeCompiler</a>
             <a target="_blank" href="https://github.com/weliveindetail/StatefulJit">
                                      https://github.com/weliveindetail/StatefulJit</a>
           </section>
